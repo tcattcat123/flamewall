@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlameWall — Стена Позора и Славы</title>
+  <meta name="description" content="Правила FlameWall: публикуй пост за $1, собирай огни, забирай 50% банка." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background: #0b0b0e;
+      padding: 0;
+    }
+    .about-page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 22px 80px;
+    }
+    .about-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: #5d5a52;
+      text-decoration: none;
+      margin-bottom: 48px;
+      transition: color 0.2s;
+    }
+    .about-back:hover {
+      color: #ff7a32;
+    }
+    .about-hero {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .about-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+    }
+    .about-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: #f4f1ec;
+      margin-bottom: 16px;
+    }
+    .about-title span {
+      background: linear-gradient(120deg, #ff7a32, #f5c96a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .about-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #9b968c;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .about-section {
+      margin-bottom: 48px;
+    }
+    .about-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #ff7a32;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .about-section h2 .icon {
+      font-size: 1.3rem;
+    }
+    .about-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      padding: 22px 24px;
+    }
+    .about-card p {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: #d4d0cb;
+      margin-bottom: 14px;
+    }
+    .about-card p:last-child {
+      margin-bottom: 0;
+    }
+    .about-card strong {
+      color: #f4f1ec;
+      font-weight: 600;
+    }
+    .about-card .highlight {
+      color: #ff7a32;
+      font-weight: 500;
+    }
+    .about-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .about-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #d4d0cb;
+    }
+    .about-list li .bullet {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: #ff7a32;
+      background: rgba(255,122,50,0.08);
+      border: 1px solid rgba(255,122,50,0.2);
+      border-radius: 8px;
+      padding: 2px 8px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .about-cta {
+      text-align: center;
+      margin-top: 56px;
+    }
+    .about-closing {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #d4d0cb;
+      max-width: 480px;
+      margin: 0 auto 22px;
+    }
+    .about-closing strong {
+      color: #ff7a32;
+    }
+    .about-cta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #ff7a32, #ff3d00);
+      color: #fff;
+      border: none;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 15px 34px;
+      border-radius: 99px;
+      text-decoration: none;
+      box-shadow: 0 6px 30px rgba(255,61,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    }
+    .about-cta a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 44px rgba(255,61,0,0.42);
+    }
+    .about-footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: #5d5a52;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+    }
+    @media (max-width: 640px) {
+      .about-page { padding: 40px 16px 60px; }
+      .about-hero { margin-bottom: 40px; }
+      .about-card { padding: 18px 18px; }
+      .about-list li { font-size: 0.88rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="about-page">
+    <a href="index.html" class="about-back">← Назад к стене</a>
+
+    <div class="about-hero">
+      <div class="about-emoji">🔥</div>
+      <h1 class="about-title">Стена Позора и Славы:<br><span>24 часа, чтобы стать Королём!</span></h1>
+      <p class="about-sub">Добро пожаловать на самую хайповую доску интернета, где за один доллар можно всё: заявить о себе, потроллить конкурента или войти в историю.</p>
+    </div>
+
+    <div class="about-section">
+      <h2><span class="icon">🕹</span> Как это работает</h2>
+      <div class="about-card">
+        <ul class="about-list">
+          <li><span class="bullet">1</span><span><strong>Оставь свой след</strong> — заплати всего <strong class="highlight">$1</strong>, чтобы разместить сообщение (текст + ссылка на твой сайт, соцсеть или мем) — анонимно или от своего имени.</span></li>
+          <li><span class="bullet">2</span><span><strong>Жги бесплатные 🔥</strong> — лайкай любые понравившиеся сообщения. Это абсолютно бесплатно, а количество лайков от одного человека не ограничено.</span></li>
+          <li><span class="bullet">3</span><span><strong>Забирай банк</strong> — каждые 24 часа раунд завершается. Сообщение, набравшее больше всего огней 🔥, объявляется <strong>«Королём стены»</strong>.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <h2><span class="icon">👑</span> Что получает победитель</h2>
+      <div class="about-card">
+        <p>Автор поста-победителя забирает <strong>50%</strong> от всех денег, собранных за этот раунд! Остальная сумма идёт на поддержку проекта и формирование стартового призового фонда для следующего дня.</p>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <h2><span class="icon">💡</span> Почему здесь весело</h2>
+      <div class="about-card">
+        <p><strong>Вечный движ</strong> — новый раунд стартует каждые 24 часа. Каждый день — обнуление, новый шанс и новая борьба за корону.</p>
+        <p><strong>Любой контент в ход</strong> — шутки, признания вроде «я ем пиццу с ананасами», запуск вирусных мемов или ссылки на проекты — здесь разрешено всё (в рамках разумного).</p>
+        <p><strong>Азарт и охваты</strong> — участники могут привлекать друзей или аудиторию, чтобы поднять свой пост в топ и забрать призовые.</p>
+      </div>
+    </div>
+
+    <div class="about-cta">
+      <p class="about-closing">Готовы ворваться в первый раунд? Закидывайте свои сообщения первыми и поборитесь за самый первый куш!</p>
+      <a href="index.html">✍️ Закинуть пост — $1</a>
+    </div>
+
+    <div class="about-footer">© 2026 FlameWall</div>
+  </div>
+</body>
+</html>

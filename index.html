@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+  <title>FlameWall — Зажги стену. $1 за пост, победитель забирает приз.</title>
+  <meta name="description" content="FlameWall — платформа, где за $1 ты публикуешь пост. Кто наберёт больше огня за 24 часа — забирает 50% банка." />
+  <meta property="og:title" content="FlameWall — Зажги стену. $1 за пост." />
+  <meta property="og:description" content="Публикуй пост за $1. Набери больше огня и забери приз." />
+  <meta property="og:image" content="https://flamewall.com/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  
+  
+  
+  <header class="header">
+    <div class="container">
+      <div class="hero">
+        <div class="hero-inner">
+          <h1 class="logo">Flame<span class="logo-accent">Wall</span></h1>
+          <p class="subtitle">Пост за <strong>$1</strong> · топ забирает <strong>50% банка</strong></p>
+        </div>
+
+        
+        <div class="hero-winner" id="heroWinner">
+          <span class="post-number">#1</span>
+          <span class="hero-crown">👑</span>
+          <div class="hero-winner-avatar">A</div>
+          <div class="hero-winner-content">
+            <div class="hero-winner-top">
+              <span class="hero-winner-handle">@alex_dev <span class="verified">✓</span></span>
+              <span class="hero-winner-badge">winner</span>
+            </div>
+            <div class="hero-winner-message">Заходи на мой новый YouTube-канал — там много полезного про веб-разработку 🚀</div>
+            <div class="hero-winner-foot">
+              <span class="hero-winner-likes">🔥 42</span>
+              <a href="#" class="hero-winner-link">youtube.com/@myawesomechannel ↗</a>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="how-card">
+          <div class="how-row">
+            <div class="how-pill"><span class="how-bullet">1</span>оплати <strong>$1</strong></div>
+            <span class="how-arrow">→</span>
+            <div class="how-pill"><span class="how-bullet">2</span>собирай <strong>🔥</strong></div>
+            <span class="how-arrow">→</span>
+            <div class="how-pill"><span class="how-bullet">3</span>забери <strong>50%</strong> банка</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  
+  
+  <main class="container" id="app">
+
+    
+    <section class="timer-section">
+      <div class="timer-row">
+        <div class="timer" id="timer">00ч 00м 00с</div>
+        <div class="round-status" id="roundStatus">приём открыт</div>
+      </div>
+      <div class="timer-track"><div class="timer-bar"></div></div>
+    </section>
+
+    
+    <section class="add-post-section">
+      <button class="btn-primary" id="openModalBtn">
+        <span>✍️ Добавить пост</span>
+        <span class="btn-price">$1</span>
+      </button>
+    </section>
+
+    
+    <section class="about-link-section">
+      <a href="about.html" class="btn-ghost">🔥 Стена Позора и Славы — как это работает</a>
+    </section>
+
+    
+    <section class="posts-section" id="postsFeed">
+
+      
+      <article class="post-card">
+        <div class="post-corner"><span class="post-number">#2</span><span class="post-corner-name">@Мария</span></div>
+        <div class="post-header">
+          <div class="post-body">
+            <div class="post-text">Я собрал самый быстрый AI-генератор мемов. Попробуйте — до слёз смешно.</div>
+            <a href="#" class="post-link">memegen.ai</a>
+            <div class="post-meta"><span class="post-author">Мария</span><span class="dot">·</span><span class="post-time">13:15</span></div>
+          </div>
+          <div class="post-likes-section">
+            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <span class="like-count">31</span>
+          </div>
+        </div>
+      </article>
+
+      
+      <article class="post-card">
+        <div class="post-corner"><span class="post-number">#3</span><span class="post-corner-name">@Дмитрий</span></div>
+        <div class="post-header">
+          <div class="post-body">
+            <div class="post-text">Курс по нейросетям со скидкой 50% — только по этой ссылке 👇</div>
+            <a href="#" class="post-link">kurs.ai</a>
+            <div class="post-meta"><span class="post-author">Дмитрий</span><span class="dot">·</span><span class="post-time">12:05</span></div>
+          </div>
+          <div class="post-likes-section">
+            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <span class="like-count">18</span>
+          </div>
+        </div>
+      </article>
+
+      
+      <article class="post-card">
+        <div class="post-corner"><span class="post-number">#4</span><span class="post-corner-name">@Ольга</span></div>
+        <div class="post-header">
+          <div class="post-body">
+            <div class="post-text">Telegram-канал про финансы и инвестиции. Без воды, только цифры.</div>
+            <a href="#" class="post-link">t.me/financeguru</a>
+            <div class="post-meta"><span class="post-author">Ольга</span><span class="dot">·</span><span class="post-time">10:48</span></div>
+          </div>
+          <div class="post-likes-section">
+            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <span class="like-count">9</span>
+          </div>
+        </div>
+      </article>
+
+      
+      <article class="post-card">
+        <div class="post-corner"><span class="post-number">#5</span><span class="post-corner-name">@Антон</span></div>
+        <div class="post-header">
+          <div class="post-body">
+            <div class="post-text">Пишу книгу о стартапах. Ищу смелого соавтора.</div>
+            <div class="post-meta"><span class="post-author">Антон</span><span class="dot">·</span><span class="post-time">09:20</span></div>
+          </div>
+          <div class="post-likes-section">
+            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <span class="like-count">4</span>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    
+    <section class="info-section">
+      <div class="info-block">
+        <h3 class="info-title">Как это работает</h3>
+        <ol class="steps">
+          <li><span class="step-num">01</span> Публикуешь пост за <strong>$1</strong></li>
+          <li><span class="step-num">02</span> Друзья ставят <strong>🔥</strong></li>
+          <li><span class="step-num">03</span> Через 24ч топ забирает <strong>50% банка</strong></li>
+        </ol>
+      </div>
+      <div class="info-block">
+        <h3 class="info-title">Статистика раунда</h3>
+        <ul class="stats">
+          <li><span>постов</span><strong>12</strong></li>
+          <li><span>банк</span><strong>$12</strong></li>
+          <li><span>приз победителю</span><strong>$6</strong></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  
+  
+  
+  <div id="addModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="modal-close" id="closeModalBtn">&times;</span>
+      <h2 class="modal-title">Добавить пост</h2>
+      <form id="postForm">
+        <div class="form-group">
+          <label for="postText">Ваш текст *</label>
+          <textarea id="postText" rows="3" maxlength="200" placeholder="Напишите что-то крутое..." required>Я создал крутой проект!</textarea>
+        </div>
+        <div class="form-group">
+          <label for="postLink">Ссылка <span class="optional">(опционально)</span></label>
+          <input type="url" id="postLink" placeholder="https://ваш-сайт.com" value="https://myproject.com" />
+        </div>
+        <div class="form-group">
+          <label for="postAuthor">Ваше имя <span class="optional">(опционально)</span></label>
+          <input type="text" id="postAuthor" placeholder="Ваш никнейм" value="Алексей" />
+        </div>
+        <div class="price-row">
+          <span class="price-label">Стоимость</span>
+          <span class="price-value">$1</span>
+        </div>
+        <button type="submit" class="btn-gradient" id="payBtn">Оплатить $1</button>
+        <div class="demo-note">Демо-режим: платёж не работает</div>
+      </form>
+    </div>
+  </div>
+
+  
+  
+  
+  <div id="winnerModal" class="modal hidden">
+    <div class="modal-content winner-modal">
+      <span class="modal-close" id="closeWinnerBtn">&times;</span>
+      <div class="winner-emoji">👑</div>
+      <p class="winner-eyebrow">round winner</p>
+      <h2 class="winner-title">Король раунда</h2>
+      <p class="winner-text" id="winnerText">🚀 Заходите на мой новый канал!</p>
+      <a href="#" class="winner-link" id="winnerLink">youtube.com/@myawesomechannel</a>
+      <div class="winner-likes" id="winnerLikes">🔥 42 огня</div>
+      <button class="btn-yellow" id="winnerCloseBtn">Отлично!</button>
+    </div>
+  </div>
+
+  
+  
+  
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 FlameWall — твоя стена славы</p>
+      <p class="footer-made">made by an indie developer, probably overnight</p>
+    </div>
+  </footer>
+
+  
+  
+  
+  <script>
+
+
+
+    const openModalBtn = document.getElementById('openModalBtn');
+    const addModal = document.getElementById('addModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const postForm = document.getElementById('postForm');
+
+    openModalBtn.addEventListener('click', () => addModal.classList.remove('hidden'));
+    closeModalBtn.addEventListener('click', () => addModal.classList.add('hidden'));
+    addModal.addEventListener('click', (e) => { if (e.target === addModal) addModal.classList.add('hidden'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { addModal.classList.add('hidden'); winnerModal.classList.add('hidden'); } });
+
+    postForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      addPostCard();
+      addModal.classList.add('hidden');
+    });
+
+
+
+    const winnerModal = document.getElementById('winnerModal');
+    const closeWinnerBtn = document.getElementById('closeWinnerBtn');
+    const winnerCloseBtn = document.getElementById('winnerCloseBtn');
+
+    document.getElementById('heroWinner').addEventListener('click', () => winnerModal.classList.remove('hidden'));
+
+    function closeWinner() { winnerModal.classList.add('hidden'); }
+    closeWinnerBtn.addEventListener('click', closeWinner);
+    winnerCloseBtn.addEventListener('click', closeWinner);
+    winnerModal.addEventListener('click', (e) => { if (e.target === winnerModal) closeWinner(); });
+
+
+
+    document.querySelectorAll('.like-btn').forEach((btn) => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const countEl = this.parentElement.querySelector('.like-count');
+        countEl.textContent = parseInt(countEl.textContent) + 1;
+        this.classList.add('liked');
+        this.style.transform = 'scale(1.35) rotate(-6deg)';
+        setTimeout(() => { this.style.transform = 'scale(1) rotate(0)'; }, 200);
+      });
+    });
+
+
+
+    function addPostCard() {
+      const text = document.getElementById('postText').value.trim() || 'Без текста';
+      const link = document.getElementById('postLink').value.trim();
+      const author = document.getElementById('postAuthor').value.trim() || 'Аноним';
+      const now = new Date();
+      const time = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+      const card = document.createElement('article');
+      const num = document.querySelectorAll('.post-card').length + 2;
+      card.className = 'post-card new';
+      card.innerHTML =
+        '<div class="post-corner"><span class="post-number">#' + num + '</span><span class="post-corner-name">@' + escapeHtml(author) + '</span></div>' +
+        '<div class="post-header">' +
+          '<div class="post-body">' +
+            '<div class="post-text">' + escapeHtml(text) + '</div>' +
+            (link ? '<a href="' + escapeHtml(link) + '" class="post-link">' + escapeHtml(link.replace(/^https?:\/\//, '')) + '</a>' : '') +
+            '<div class="post-meta"><span class="post-author">' + escapeHtml(author) + '</span><span class="dot">·</span><span class="post-time">' + time + '</span></div>' +
+          '</div>' +
+          '<div class="post-likes-section"><button class="like-btn" aria-label="Поставить огонь">🔥</button><span class="like-count">0</span></div>' +
+        '</div>';
+
+      const feed = document.getElementById('postsFeed');
+      feed.insertBefore(card, feed.firstChild);
+      card.querySelector('.like-btn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const countEl = this.parentElement.querySelector('.like-count');
+        countEl.textContent = parseInt(countEl.textContent) + 1;
+        this.style.transform = 'scale(1.35) rotate(-6deg)';
+        setTimeout(() => { this.style.transform = 'scale(1) rotate(0)'; }, 200);
+      });
+      card.classList.remove('new');
+      requestAnimationFrame(() => card.classList.add('show'));
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+
+
+    function updateDemoTimer() {
+      const deadline = new Date();
+      deadline.setHours(deadline.getHours() + 24);
+      const start = new Date();
+
+      const timerEl = document.getElementById('timer');
+      const statusEl = document.getElementById('roundStatus');
+      const barEl = document.querySelector('.timer-bar');
+
+      function tick() {
+        const now = new Date();
+        const diff = deadline - now;
+        const total = deadline - start;
+
+        if (diff <= 0) {
+          timerEl.textContent = '⏰ Раунд завершён';
+          statusEl.textContent = 'смотрите победителя ниже';
+          document.querySelector('.btn-primary').style.opacity = '0';
+          document.querySelector('.btn-primary').style.pointerEvents = 'none';
+          barEl.style.width = '100%';
+          return;
+        }
+
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timerEl.textContent =
+          String(h).padStart(2, '0') + 'ч ' +
+          String(m).padStart(2, '0') + 'м ' +
+          String(s).padStart(2, '0') + 'с';
+
+        barEl.style.width = ((1 - diff / total) * 100).toFixed(2) + '%';
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    updateDemoTimer();
+
+
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.post-card, .info-block').forEach((el) => observer.observe(el));
+
+    console.log('🔥 FlameWall — демо-макет готов!');
+  </script>
+
+</body>
+</html>
