@@ -35,6 +35,11 @@
         <div class="hero-inner">
           <h1 class="logo">Flame<span class="logo-accent">Wall</span></h1>
           <p class="subtitle">Post for <strong>$1</strong> · top takes <strong>50% of the pot</strong></p>
+          <div class="fomo">
+            <span class="fomo-icon">⚡</span>
+            <span class="fomo-badge">free slots: <strong id="fomoSlots">99</strong></span>
+            <span class="fomo-text">everyone can leave their message — it stays on the wall forever</span>
+          </div>
         </div>
 
         
@@ -403,6 +408,16 @@
       const next = document.body.classList.contains('light') ? 'dark' : 'light';
       applyTheme(next);
     });
+
+
+    const fomoEl = document.getElementById('fomoSlots');
+    let slots = parseInt(fomoEl.textContent);
+    setInterval(() => {
+      if (slots > 1) {
+        slots -= 1;
+        fomoEl.textContent = slots;
+      }
+    }, 20000);
 
     console.log('🔥 FlameWall — demo ready!');
   </script>

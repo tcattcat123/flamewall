@@ -188,6 +188,46 @@ body {
   font-weight: 600;
 }
 
+/* ============================================================
+   FOMO TRIGGER
+   ============================================================ */
+.fomo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.fomo-icon {
+  font-size: 0.9rem;
+}
+
+.fomo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  background: rgba(255, 122, 50, 0.1);
+  border: 1px solid rgba(255, 122, 50, 0.3);
+  border-radius: 99px;
+  padding: 4px 12px;
+}
+
+.fomo-badge strong {
+  color: var(--ember);
+  font-size: 0.9rem;
+}
+
+.fomo-text {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
 
 .hero-winner {
   position: relative;
@@ -1257,6 +1297,15 @@ body.light .grain { opacity: 0.02; }
 body.light ::selection { background: rgba(255, 122, 50, 0.25); color: #2f343a; }
 
 body.light .logo { filter: drop-shadow(0 0 14px rgba(255, 122, 50, 0.12)); }
+
+body.light .fomo-badge {
+  background: rgba(255, 122, 50, 0.12);
+  border-color: rgba(255, 122, 50, 0.35);
+}
+
+body.light .fomo-badge strong {
+  color: #e0690f;
+}
 
 body.light .hero-winner {
   background: linear-gradient(165deg, #ffffff, #f1e9dc);
