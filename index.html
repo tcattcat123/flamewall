@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   
-  <title>FlameWall — Зажги стену. $1 за пост, победитель забирает приз.</title>
-  <meta name="description" content="FlameWall — платформа, где за $1 ты публикуешь пост. Кто наберёт больше огня за 24 часа — забирает 50% банка." />
-  <meta property="og:title" content="FlameWall — Зажги стену. $1 за пост." />
-  <meta property="og:description" content="Публикуй пост за $1. Набери больше огня и забери приз." />
+  <title>FlameWall — Light Up the Wall. $1 per post, winner takes the prize.</title>
+  <meta name="description" content="FlameWall — post for $1. Whoever gets the most fire in 24 hours takes 50% of the pot." />
+  <meta property="og:title" content="FlameWall — Light Up the Wall. $1 per post." />
+  <meta property="og:description" content="Post for $1. Get the most fire and take the prize." />
   <meta property="og:image" content="https://flamewall.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -34,7 +34,7 @@
       <div class="hero">
         <div class="hero-inner">
           <h1 class="logo">Flame<span class="logo-accent">Wall</span></h1>
-          <p class="subtitle">Пост за <strong>$1</strong> · топ забирает <strong>50% банка</strong></p>
+          <p class="subtitle">Post for <strong>$1</strong> · top takes <strong>50% of the pot</strong></p>
         </div>
 
         
@@ -46,7 +46,7 @@
               <span class="hero-winner-handle">@alex_dev <span class="verified">✓</span></span>
               <span class="hero-winner-badge">winner</span>
             </div>
-            <div class="hero-winner-message">Заходи на мой новый YouTube-канал — там много полезного про веб-разработку 🚀</div>
+            <div class="hero-winner-message">I followed my heart. It led me to the fridge. ❤️🧊</div>
             <div class="hero-winner-foot">
               <span class="hero-winner-likes">🔥 42</span>
               <a href="#" class="hero-winner-link">youtube.com/@myawesomechannel ↗</a>
@@ -57,11 +57,11 @@
         
         <div class="how-card">
           <div class="how-row">
-            <div class="how-pill"><span class="how-bullet">1</span>оплати <strong>$1</strong></div>
+            <div class="how-pill"><span class="how-bullet">1</span>pay <strong>$1</strong></div>
             <span class="how-arrow">→</span>
-            <div class="how-pill"><span class="how-bullet">2</span>собирай <strong>🔥</strong></div>
+            <div class="how-pill"><span class="how-bullet">2</span>collect <strong>🔥</strong></div>
             <span class="how-arrow">→</span>
-            <div class="how-pill"><span class="how-bullet">3</span>забери <strong>50%</strong> банка</div>
+            <div class="how-pill"><span class="how-bullet">3</span>take <strong>50%</strong> of the pot</div>
           </div>
         </div>
       </div>
@@ -75,9 +75,18 @@
 
     
     <section class="timer-section">
+      <div class="stats-card">
+        <div class="stats-row">
+          <div class="stats-pill"><span class="stats-ico">📊</span><span class="stats-name">posts</span><strong class="stats-val">12</strong></div>
+          <span class="stats-dot">·</span>
+          <div class="stats-pill"><span class="stats-ico">💰</span><span class="stats-name">pot</span><strong class="stats-val stats-pot">$12</strong></div>
+          <span class="stats-dot">·</span>
+          <div class="stats-pill"><span class="stats-ico">🏆</span><span class="stats-name">winner prize</span><strong class="stats-val stats-gold">$6</strong></div>
+        </div>
+      </div>
       <div class="timer-row">
-        <div class="timer" id="timer">00ч 00м 00с</div>
-        <div class="round-status" id="roundStatus">приём открыт</div>
+        <div class="timer" id="timer">00h 00m 00s</div>
+        <div class="round-status" id="roundStatus">submissions open</div>
       </div>
       <div class="timer-track"><div class="timer-bar"></div></div>
     </section>
@@ -85,14 +94,14 @@
     
     <section class="add-post-section">
       <button class="btn-primary" id="openModalBtn">
-        <span>✍️ Добавить пост</span>
+        <span>✍️ Add post</span>
         <span class="btn-price">$1</span>
       </button>
     </section>
 
     
     <section class="about-link-section">
-      <a href="about.html" class="btn-ghost">🔥 Стена Позора и Славы — как это работает</a>
+      <a href="about.html" class="btn-ghost">🔥 Wall of Shame &amp; Glory — how it works</a>
     </section>
 
     
@@ -100,15 +109,15 @@
 
       
       <article class="post-card">
-        <div class="post-corner"><span class="post-number">#2</span><span class="post-corner-name">@Мария</span></div>
+        <div class="post-corner"><span class="post-number">#2</span><span class="post-corner-name">@Maria</span></div>
         <div class="post-header">
           <div class="post-body">
-            <div class="post-text">Я собрал самый быстрый AI-генератор мемов. Попробуйте — до слёз смешно.</div>
+            <div class="post-text">I asked ChatGPT to roast me and it genuinely hurt my feelings. Judge for yourself. 🤖💔</div>
             <a href="#" class="post-link">memegen.ai</a>
-            <div class="post-meta"><span class="post-author">Мария</span><span class="dot">·</span><span class="post-time">13:15</span></div>
+            <div class="post-meta"><span class="post-author">Maria</span><span class="dot">·</span><span class="post-time">13:15</span></div>
           </div>
           <div class="post-likes-section">
-            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <button class="like-btn" aria-label="Give fire">🔥</button>
             <span class="like-count">31</span>
           </div>
         </div>
@@ -116,15 +125,15 @@
 
       
       <article class="post-card">
-        <div class="post-corner"><span class="post-number">#3</span><span class="post-corner-name">@Дмитрий</span></div>
+        <div class="post-corner"><span class="post-number">#3</span><span class="post-corner-name">@Dmitry</span></div>
         <div class="post-header">
           <div class="post-body">
-            <div class="post-text">Курс по нейросетям со скидкой 50% — только по этой ссылке 👇</div>
+            <div class="post-text">I eat pizza with pineapple and I'm not sorry. Fight me. 🍍🔥</div>
             <a href="#" class="post-link">kurs.ai</a>
-            <div class="post-meta"><span class="post-author">Дмитрий</span><span class="dot">·</span><span class="post-time">12:05</span></div>
+            <div class="post-meta"><span class="post-author">Dmitry</span><span class="dot">·</span><span class="post-time">12:05</span></div>
           </div>
           <div class="post-likes-section">
-            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <button class="like-btn" aria-label="Give fire">🔥</button>
             <span class="like-count">18</span>
           </div>
         </div>
@@ -132,15 +141,15 @@
 
       
       <article class="post-card">
-        <div class="post-corner"><span class="post-number">#4</span><span class="post-corner-name">@Ольга</span></div>
+        <div class="post-corner"><span class="post-number">#4</span><span class="post-corner-name">@Olga</span></div>
         <div class="post-header">
           <div class="post-body">
-            <div class="post-text">Telegram-канал про финансы и инвестиции. Без воды, только цифры.</div>
+            <div class="post-text">My grandma codes better than half the devs I've worked with. She's 74. 👵💻</div>
             <a href="#" class="post-link">t.me/financeguru</a>
-            <div class="post-meta"><span class="post-author">Ольга</span><span class="dot">·</span><span class="post-time">10:48</span></div>
+            <div class="post-meta"><span class="post-author">Olga</span><span class="dot">·</span><span class="post-time">10:48</span></div>
           </div>
           <div class="post-likes-section">
-            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <button class="like-btn" aria-label="Give fire">🔥</button>
             <span class="like-count">9</span>
           </div>
         </div>
@@ -148,14 +157,14 @@
 
       
       <article class="post-card">
-        <div class="post-corner"><span class="post-number">#5</span><span class="post-corner-name">@Антон</span></div>
+        <div class="post-corner"><span class="post-number">#5</span><span class="post-corner-name">@Anton</span></div>
         <div class="post-header">
           <div class="post-body">
-            <div class="post-text">Пишу книгу о стартапах. Ищу смелого соавтора.</div>
-            <div class="post-meta"><span class="post-author">Антон</span><span class="dot">·</span><span class="post-time">09:20</span></div>
+            <div class="post-text">Writing a book about startups. Looking for a brave co-author.</div>
+            <div class="post-meta"><span class="post-author">Anton</span><span class="dot">·</span><span class="post-time">09:20</span></div>
           </div>
           <div class="post-likes-section">
-            <button class="like-btn" aria-label="Поставить огонь">🔥</button>
+            <button class="like-btn" aria-label="Give fire">🔥</button>
             <span class="like-count">4</span>
           </div>
         </div>
@@ -166,20 +175,12 @@
     
     <section class="info-section">
       <div class="info-block">
-        <h3 class="info-title">Как это работает</h3>
+        <h3 class="info-title">How it works</h3>
         <ol class="steps">
-          <li><span class="step-num">01</span> Публикуешь пост за <strong>$1</strong></li>
-          <li><span class="step-num">02</span> Друзья ставят <strong>🔥</strong></li>
-          <li><span class="step-num">03</span> Через 24ч топ забирает <strong>50% банка</strong></li>
+          <li><span class="step-num">01</span> Post for <strong>$1</strong></li>
+          <li><span class="step-num">02</span> Friends give <strong>🔥</strong></li>
+          <li><span class="step-num">03</span> After 24h the top takes <strong>50% of the pot</strong></li>
         </ol>
-      </div>
-      <div class="info-block">
-        <h3 class="info-title">Статистика раунда</h3>
-        <ul class="stats">
-          <li><span>постов</span><strong>12</strong></li>
-          <li><span>банк</span><strong>$12</strong></li>
-          <li><span>приз победителю</span><strong>$6</strong></li>
-        </ul>
       </div>
     </section>
 
@@ -191,26 +192,26 @@
   <div id="addModal" class="modal hidden">
     <div class="modal-content">
       <span class="modal-close" id="closeModalBtn">&times;</span>
-      <h2 class="modal-title">Добавить пост</h2>
+      <h2 class="modal-title">Add post</h2>
       <form id="postForm">
         <div class="form-group">
-          <label for="postText">Ваш текст *</label>
-          <textarea id="postText" rows="3" maxlength="200" placeholder="Напишите что-то крутое..." required>Я создал крутой проект!</textarea>
+          <label for="postText">Your text *</label>
+          <textarea id="postText" rows="3" maxlength="200" placeholder="Write something cool..." required>I made a cool project!</textarea>
         </div>
         <div class="form-group">
-          <label for="postLink">Ссылка <span class="optional">(опционально)</span></label>
-          <input type="url" id="postLink" placeholder="https://ваш-сайт.com" value="https://myproject.com" />
+          <label for="postLink">Link <span class="optional">(optional)</span></label>
+          <input type="url" id="postLink" placeholder="https://your-site.com" value="https://myproject.com" />
         </div>
         <div class="form-group">
-          <label for="postAuthor">Ваше имя <span class="optional">(опционально)</span></label>
-          <input type="text" id="postAuthor" placeholder="Ваш никнейм" value="Алексей" />
+          <label for="postAuthor">Your name <span class="optional">(optional)</span></label>
+          <input type="text" id="postAuthor" placeholder="Your nickname" value="Alex" />
         </div>
         <div class="price-row">
-          <span class="price-label">Стоимость</span>
+          <span class="price-label">Price</span>
           <span class="price-value">$1</span>
         </div>
-        <button type="submit" class="btn-gradient" id="payBtn">Оплатить $1</button>
-        <div class="demo-note">Демо-режим: платёж не работает</div>
+        <button type="submit" class="btn-gradient" id="payBtn">Pay $1</button>
+        <div class="demo-note">Demo mode: payment is not available</div>
       </form>
     </div>
   </div>
@@ -223,11 +224,11 @@
       <span class="modal-close" id="closeWinnerBtn">&times;</span>
       <div class="winner-emoji">👑</div>
       <p class="winner-eyebrow">round winner</p>
-      <h2 class="winner-title">Король раунда</h2>
-      <p class="winner-text" id="winnerText">🚀 Заходите на мой новый канал!</p>
+      <h2 class="winner-title">King of the round</h2>
+      <p class="winner-text" id="winnerText">🚀 Check out my new channel!</p>
       <a href="#" class="winner-link" id="winnerLink">youtube.com/@myawesomechannel</a>
-      <div class="winner-likes" id="winnerLikes">🔥 42 огня</div>
-      <button class="btn-yellow" id="winnerCloseBtn">Отлично!</button>
+      <div class="winner-likes" id="winnerLikes">🔥 42 fires</div>
+      <button class="btn-yellow" id="winnerCloseBtn">Awesome!</button>
     </div>
   </div>
 
@@ -236,8 +237,9 @@
   
   <footer class="footer">
     <div class="container">
-      <p>© 2026 FlameWall — твоя стена славы</p>
+      <p>© 2026 FlameWall — your wall of fame</p>
       <p class="footer-made">made by an indie developer, probably overnight</p>
+      <button id="themeToggle" class="theme-toggle" aria-label="Switch theme">🌙</button>
     </div>
   </footer>
 
@@ -293,9 +295,9 @@
 
 
     function addPostCard() {
-      const text = document.getElementById('postText').value.trim() || 'Без текста';
+      const text = document.getElementById('postText').value.trim() || 'No text';
       const link = document.getElementById('postLink').value.trim();
-      const author = document.getElementById('postAuthor').value.trim() || 'Аноним';
+      const author = document.getElementById('postAuthor').value.trim() || 'Anonymous';
       const now = new Date();
       const time = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
@@ -310,7 +312,7 @@
             (link ? '<a href="' + escapeHtml(link) + '" class="post-link">' + escapeHtml(link.replace(/^https?:\/\//, '')) + '</a>' : '') +
             '<div class="post-meta"><span class="post-author">' + escapeHtml(author) + '</span><span class="dot">·</span><span class="post-time">' + time + '</span></div>' +
           '</div>' +
-          '<div class="post-likes-section"><button class="like-btn" aria-label="Поставить огонь">🔥</button><span class="like-count">0</span></div>' +
+          '<div class="post-likes-section"><button class="like-btn" aria-label="Give fire">🔥</button><span class="like-count">0</span></div>' +
         '</div>';
 
       const feed = document.getElementById('postsFeed');
@@ -349,8 +351,8 @@
         const total = deadline - start;
 
         if (diff <= 0) {
-          timerEl.textContent = '⏰ Раунд завершён';
-          statusEl.textContent = 'смотрите победителя ниже';
+          timerEl.textContent = '⏰ Round over';
+          statusEl.textContent = 'see the winner below';
           document.querySelector('.btn-primary').style.opacity = '0';
           document.querySelector('.btn-primary').style.pointerEvents = 'none';
           barEl.style.width = '100%';
@@ -362,9 +364,9 @@
         const s = Math.floor((diff % (1000 * 60)) / 1000);
 
         timerEl.textContent =
-          String(h).padStart(2, '0') + 'ч ' +
-          String(m).padStart(2, '0') + 'м ' +
-          String(s).padStart(2, '0') + 'с';
+          String(h).padStart(2, '0') + 'h ' +
+          String(m).padStart(2, '0') + 'm ' +
+          String(s).padStart(2, '0') + 's';
 
         barEl.style.width = ((1 - diff / total) * 100).toFixed(2) + '%';
       }
@@ -385,7 +387,24 @@
 
     document.querySelectorAll('.post-card, .info-block').forEach((el) => observer.observe(el));
 
-    console.log('🔥 FlameWall — демо-макет готов!');
+
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('fw-theme');
+
+    function applyTheme(theme) {
+      document.body.classList.toggle('light', theme === 'light');
+      themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+      localStorage.setItem('fw-theme', theme);
+    }
+
+    if (savedTheme) applyTheme(savedTheme); else applyTheme('light');
+
+    themeToggle.addEventListener('click', () => {
+      const next = document.body.classList.contains('light') ? 'dark' : 'light';
+      applyTheme(next);
+    });
+
+    console.log('🔥 FlameWall — demo ready!');
   </script>
 
 </body>

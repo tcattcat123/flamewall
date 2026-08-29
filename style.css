@@ -82,6 +82,70 @@ body {
   animation: fadeUp 0.8s ease both;
 }
 
+.stats-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 6px 0;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.stats-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  padding: 7px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  white-space: nowrap;
+}
+
+.stats-ico {
+  font-size: 0.95rem;
+}
+
+.stats-name {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.stats-val {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stats-pot {
+  color: #4ade80;
+  text-shadow: 0 0 18px rgba(74, 222, 128, 0.35);
+}
+
+.stats-gold {
+  color: var(--gold);
+}
+
+.stats-dot {
+  color: var(--text-faint);
+  font-size: 1rem;
+  padding: 0 2px;
+}
+
 .hero {
   position: relative;
   display: flex;
@@ -861,6 +925,50 @@ body {
   animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+#addModal .modal-content {
+  padding: 22px 24px 20px;
+  max-width: 400px;
+}
+
+#addModal .modal-title {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+}
+
+#addModal .form-group {
+  margin-bottom: 12px;
+}
+
+#addModal .form-group label {
+  margin-bottom: 5px;
+  font-size: 0.65rem;
+}
+
+#addModal .form-group textarea,
+#addModal .form-group input {
+  padding: 9px 13px;
+  font-size: 0.92rem;
+}
+
+#addModal .price-row {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+}
+
+#addModal .price-value {
+  font-size: 1.2rem;
+}
+
+#addModal .btn-gradient {
+  padding: 11px;
+  font-size: 0.95rem;
+}
+
+#addModal .demo-note {
+  margin-top: 10px;
+  font-size: 0.68rem;
+}
+
 .modal-close {
   position: absolute;
   top: 18px;
@@ -1094,3 +1202,218 @@ body {
   }
   html { scroll-behavior: auto; }
 }
+
+/* ============================================================
+   LIGHT THEME — переключение на светло-голубую/бежевую тему
+   ============================================================ */
+.theme-toggle {
+  margin-top: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  color: var(--text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  border-color: var(--border-hover);
+}
+
+body.light {
+  --bg: #eef1f4;
+  --bg-soft: #e4e8ec;
+  --surface: rgba(255, 255, 255, 0.65);
+  --surface-strong: #fafbfc;
+  --border: rgba(30, 40, 50, 0.10);
+  --border-hover: rgba(255, 122, 50, 0.5);
+  --text: #2f343a;
+  --text-dim: #5f6872;
+  --text-faint: #8b939c;
+  --ember: #ff7a32;
+  --ember-deep: #ff3d00;
+  --gold: #c89a3c;
+  --shadow: 0 20px 60px rgba(60, 50, 30, 0.10);
+}
+
+body.light .ambient {
+  background:
+    radial-gradient(60% 40% at 50% -10%, rgba(255, 122, 50, 0.08), transparent 70%),
+    radial-gradient(40% 30% at 85% 20%, rgba(180, 190, 200, 0.12), transparent 70%),
+    radial-gradient(50% 40% at 10% 60%, rgba(190, 180, 160, 0.10), transparent 70%);
+}
+
+body.light .grain { opacity: 0.02; }
+
+body.light ::selection { background: rgba(255, 122, 50, 0.25); color: #2f343a; }
+
+body.light .logo { filter: drop-shadow(0 0 14px rgba(255, 122, 50, 0.12)); }
+
+body.light .hero-winner {
+  background: linear-gradient(165deg, #ffffff, #f1e9dc);
+  border-color: rgba(200, 154, 60, 0.5);
+  box-shadow: 0 10px 40px rgba(60, 50, 30, 0.10);
+}
+
+body.light .hero-winner:hover {
+  border-color: rgba(200, 154, 60, 0.8);
+  box-shadow: 0 16px 54px rgba(60, 50, 30, 0.15);
+}
+
+body.light .hero-winner-message {
+  background: linear-gradient(120deg, #2f343a 30%, #5a4632 60%, #8a6a24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+
+body.light .hero-winner-handle { color: #2f343a; }
+
+body.light .hero-winner-likes { color: #a87820; }
+
+body.light .hero-winner-link { color: #e0690f; }
+
+body.light .how-card {
+  background: linear-gradient(170deg, #ffffff, #eef1f4);
+  border-color: rgba(255, 122, 50, 0.25);
+}
+
+body.light .stats-card {
+  background: transparent;
+  border: none;
+}
+
+body.light .stats-pill {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(30, 40, 50, 0.12);
+}
+
+body.light .stats-val {
+  color: #2f343a;
+}
+
+body.light .stats-pot {
+  color: #16a34a;
+  text-shadow: 0 0 14px rgba(22, 163, 74, 0.3);
+}
+
+body.light .how-pill {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(30, 40, 50, 0.1);
+}
+
+body.light .how-pill strong { color: #2f343a; }
+
+body.light .how-bullet {
+  color: #e0690f;
+  background: rgba(255, 122, 50, 0.12);
+  border-color: rgba(255, 122, 50, 0.3);
+}
+
+body.light .timer { text-shadow: 0 0 24px rgba(255, 122, 50, 0.15); }
+
+body.light .round-status { color: #b07220; }
+
+body.light .timer-track { background: rgba(30, 40, 50, 0.12); }
+
+body.light .timer-bar {
+  background: linear-gradient(90deg, #ff3d00, #ff7a32, #e9b64a);
+}
+
+body.light .btn-price {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+body.light .btn-ghost {
+  color: #5f6872;
+  border-color: rgba(30, 40, 50, 0.15);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+body.light .btn-ghost:hover {
+  color: #2f343a;
+  border-color: rgba(255, 122, 50, 0.5);
+  background: rgba(255, 122, 50, 0.08);
+}
+
+body.light .post-card {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(30, 40, 50, 0.10);
+}
+
+body.light .post-card:hover {
+  border-color: rgba(255, 122, 50, 0.4);
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(60, 50, 30, 0.12);
+}
+
+body.light .post-corner {
+  background: #f0f2f4;
+  border-color: rgba(30, 40, 50, 0.10);
+}
+
+body.light .post-link { color: #e0690f; }
+
+body.light .like-btn { filter: none; }
+
+body.light .like-btn.liked + .like-count { color: #e0690f; }
+
+body.light .info-block {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(30, 40, 50, 0.10);
+}
+
+body.light .step-num {
+  color: #e0690f;
+  background: rgba(255, 122, 50, 0.1);
+  border-color: rgba(255, 122, 50, 0.25);
+}
+
+body.light .stats li { border-bottom-color: rgba(30, 40, 50, 0.08); }
+
+body.light .stats li:nth-child(2) strong { color: #e0690f; }
+body.light .stats li:nth-child(3) strong { color: #a87820; }
+
+body.light .modal { background: rgba(30, 40, 50, 0.4); }
+
+body.light .modal-content {
+  background: linear-gradient(165deg, #ffffff, #f0f2f4);
+  border-color: rgba(255, 122, 50, 0.25);
+}
+
+body.light .form-group textarea,
+body.light .form-group input {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(30, 40, 50, 0.12);
+}
+
+body.light .price-row {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(30, 40, 50, 0.15);
+}
+
+body.light .price-value { color: #e0690f; }
+
+body.light .winner-modal {
+  background: linear-gradient(165deg, #fdf8ec, #f0f2f4);
+  border-color: rgba(200, 154, 60, 0.5);
+}
+
+body.light .winner-eyebrow { color: #a87820; }
+body.light .winner-title { color: #b07220; }
+body.light .winner-likes { color: #e0690f; }
+
+body.light .footer { border-top-color: rgba(30, 40, 50, 0.08); }
+
+body.light .theme-toggle { background: #ffffff; border-color: rgba(30, 40, 50, 0.15); color: #2f343a; }
