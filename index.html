@@ -247,7 +247,7 @@
         const wv = document.getElementById('winnerVotes');
         const wl = document.getElementById('winnerLink');
         const wAv = document.querySelector('.hero-winner-avatar');
-        wh.innerHTML = '@' + (top.author_name || 'anonymous') + ' <span class="verified">✓</span>';
+        wh.innerHTML = '@' + escapeHtml(top.author_name || 'anonymous') + ' <span class="verified">✓</span>';
         wm.textContent = top.text;
         wv.textContent = '🔥 ' + top.votes;
         if (top.avatar_url) {
