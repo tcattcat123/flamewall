@@ -122,11 +122,11 @@
           <label for="postTweetUrl">Twitter / X link *</label>
           <input type="url" id="postTweetUrl" placeholder="https://x.com/user/status/123" required />
         </div>
-        <div class="price-row">
-          <span class="price-label">Price</span>
-          <span class="price-value">$1</span>
+        <div class="price-row" id="priceRow">
+          <span class="price-label" id="priceLabel">Free</span>
+          <span class="price-value" id="priceValue">99 left</span>
         </div>
-        <button type="submit" class="btn-gradient" id="payBtn">Pay $1</button>
+        <button type="submit" class="btn-gradient" id="payBtn">Post for free</button>
         <div class="demo-note" id="postError"></div>
       </form>
     </div>
@@ -395,7 +395,7 @@
         postError.textContent = err.message;
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Pay $1';
+        renderFreeSlots();
       }
     });
 
@@ -444,6 +444,9 @@
       const openBtn = document.getElementById('openModalBtn');
       const btnLabel = openBtn.querySelector('span:first-child');
       const fomoEl = document.getElementById('fomoSlots');
+      const priceLabel = document.getElementById('priceLabel');
+      const priceValue = document.getElementById('priceValue');
+      const payBtn = document.getElementById('payBtn');
 
       if (fomoEl) fomoEl.textContent = freeSlots;
 
@@ -451,10 +454,16 @@
         if (badge) badge.textContent = freeSlots;
         openBtn.classList.remove('paid-mode');
         if (btnLabel) btnLabel.textContent = '✍️ Free slots';
+        if (priceLabel) priceLabel.textContent = 'Free';
+        if (priceValue) priceValue.textContent = freeSlots + ' left';
+        if (payBtn) payBtn.textContent = 'Post for free';
       } else {
         if (badge) badge.textContent = '$1';
         openBtn.classList.add('paid-mode');
         if (btnLabel) btnLabel.textContent = '✍️ Add post';
+        if (priceLabel) priceLabel.textContent = 'Price';
+        if (priceValue) priceValue.textContent = '$1';
+        if (payBtn) payBtn.textContent = 'Pay $1';
       }
     }
 
