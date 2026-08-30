@@ -111,6 +111,18 @@
       </div>
     </section>
 
+    <section class="footer-stats">
+      <div class="stats-card">
+        <div class="stats-row">
+          <div class="stats-pill"><span class="stats-ico">📊</span><span class="stats-name">posts</span><strong class="stats-val" id="footerStatPosts">0</strong></div>
+          <span class="stats-dot">·</span>
+          <div class="stats-pill"><span class="stats-ico">💰</span><span class="stats-name">pot</span><strong class="stats-val stats-pot" id="footerStatPot">$0</strong></div>
+          <span class="stats-dot">·</span>
+          <div class="stats-pill"><span class="stats-ico">🏆</span><span class="stats-name">winner prize</span><strong class="stats-val stats-gold" id="footerStatPrize">$0</strong></div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <div id="addModal" class="modal hidden">
@@ -121,6 +133,7 @@
         <div class="form-group">
           <label for="postTweetUrl">Twitter / X link *</label>
           <input type="url" id="postTweetUrl" placeholder="https://x.com/user/status/123" required />
+          <p class="form-rules">You publish a post. If your post gets the most 🔥 activity, you take <strong>50% of the total pot</strong>. The post stays on the wall for 24 hours.</p>
         </div>
         <div class="price-row" id="priceRow">
           <span class="price-label" id="priceLabel">Free</span>
@@ -214,6 +227,9 @@
       document.getElementById('statPosts').textContent = posts.length;
       document.getElementById('statPot').textContent = '$' + pot.toFixed(2).replace(/\.00$/, '');
       document.getElementById('statPrize').textContent = '$' + prize.toFixed(2).replace(/\.00$/, '');
+      document.getElementById('footerStatPosts').textContent = posts.length;
+      document.getElementById('footerStatPot').textContent = '$' + pot.toFixed(2).replace(/\.00$/, '');
+      document.getElementById('footerStatPrize').textContent = '$' + prize.toFixed(2).replace(/\.00$/, '');
 
       const feed = document.getElementById('postsFeed');
       feed.innerHTML = '';

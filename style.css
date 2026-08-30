@@ -862,6 +862,11 @@ body {
   margin: 0 0 40px;
 }
 
+.footer-stats {
+  margin: -20px 0 40px;
+  text-align: center;
+}
+
 .info-block {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1117,6 +1122,17 @@ body {
   border-color: rgba(255, 122, 50, 0.6);
   background: rgba(255, 122, 50, 0.04);
   box-shadow: 0 0 0 3px rgba(255, 122, 50, 0.12);
+}
+
+.form-rules {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.form-rules strong {
+  color: var(--gold);
 }
 
 .price-row {
