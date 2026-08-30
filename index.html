@@ -26,11 +26,9 @@
   <div class="ambient" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  
-  
-  
   <header class="header">
     <div class="container">
+      <button id="authBtn" class="auth-btn">Sign in</button>
       <div class="hero">
         <div class="hero-inner">
           <h1 class="logo">Flame<span class="logo-accent">Wall</span></h1>
@@ -42,24 +40,22 @@
           </div>
         </div>
 
-        
         <div class="hero-winner" id="heroWinner">
           <span class="hero-crown" style="left:27px">👑</span>
           <div class="hero-winner-avatar">A</div>
           <div class="hero-winner-content">
             <div class="hero-winner-top">
-              <span class="hero-winner-handle">@alex_dev <span class="verified">✓</span></span>
+              <span class="hero-winner-handle" id="winnerHandle">@king_of_the_round <span class="verified">✓</span></span>
               <span class="hero-winner-badge">winner</span>
             </div>
-            <div class="hero-winner-message">I followed my heart. It led me to the fridge. ❤️🧊</div>
+            <div class="hero-winner-message" id="winnerMsg">No winner yet — be the first to take the crown! 👑</div>
             <div class="hero-winner-foot">
-              <span class="hero-winner-likes">🔥 42</span>
-              <a href="#" class="hero-winner-link">youtube.com/@myawesomechannel ↗</a>
+              <span class="hero-winner-likes" id="winnerVotes">🔥 0</span>
+              <a href="#" class="hero-winner-link" id="winnerLink" style="display:none"></a>
             </div>
           </div>
         </div>
 
-        
         <div class="how-card">
           <div class="how-row">
             <div class="how-pill"><span class="how-bullet">1</span>pay <strong>$1</strong></div>
@@ -73,30 +69,25 @@
     </div>
   </header>
 
-  
-  
-  
   <main class="container" id="app">
 
-    
     <section class="timer-section">
       <div class="stats-card">
         <div class="stats-row">
-          <div class="stats-pill"><span class="stats-ico">📊</span><span class="stats-name">posts</span><strong class="stats-val">12</strong></div>
+          <div class="stats-pill"><span class="stats-ico">📊</span><span class="stats-name">posts</span><strong class="stats-val" id="statPosts">0</strong></div>
           <span class="stats-dot">·</span>
-          <div class="stats-pill"><span class="stats-ico">💰</span><span class="stats-name">pot</span><strong class="stats-val stats-pot">$12</strong></div>
+          <div class="stats-pill"><span class="stats-ico">💰</span><span class="stats-name">pot</span><strong class="stats-val stats-pot" id="statPot">$0</strong></div>
           <span class="stats-dot">·</span>
-          <div class="stats-pill"><span class="stats-ico">🏆</span><span class="stats-name">winner prize</span><strong class="stats-val stats-gold">$6</strong></div>
+          <div class="stats-pill"><span class="stats-ico">🏆</span><span class="stats-name">winner prize</span><strong class="stats-val stats-gold" id="statPrize">$0</strong></div>
         </div>
       </div>
       <div class="timer-row">
-        <div class="timer" id="timer">00h 00m 00s</div>
-        <div class="round-status" id="roundStatus">submissions open</div>
+        <div class="timer" id="timer">--h --m --s</div>
+        <div class="round-status" id="roundStatus">loading round…</div>
       </div>
       <div class="timer-track"><div class="timer-bar"></div></div>
     </section>
 
-    
     <section class="add-post-section">
       <button class="btn-primary" id="openModalBtn">
         <span>✍️ Add post</span>
@@ -104,80 +95,12 @@
       </button>
     </section>
 
-    
     <section class="about-link-section">
       <a href="about.html" class="btn-ghost">🔥 Wall of Shame &amp; Glory — how it works</a>
     </section>
 
-    
-    <section class="posts-section" id="postsFeed">
+    <section class="posts-section" id="postsFeed"></section>
 
-      
-      <article class="post-card">
-        <div class="post-corner"><span class="post-number">#2</span><span class="post-corner-name">@Maria</span></div>
-        <div class="post-header">
-          <div class="post-body">
-            <div class="post-text">I asked ChatGPT to roast me and it genuinely hurt my feelings. Judge for yourself. 🤖💔</div>
-            <a href="#" class="post-link">memegen.ai</a>
-            <div class="post-meta"><span class="post-author">Maria</span><span class="dot">·</span><span class="post-time">13:15</span></div>
-          </div>
-          <div class="post-likes-section">
-            <button class="like-btn" aria-label="Give fire">🔥</button>
-            <span class="like-count">31</span>
-          </div>
-        </div>
-      </article>
-
-      
-      <article class="post-card">
-        <div class="post-corner"><span class="post-number">#3</span><span class="post-corner-name">@Dmitry</span></div>
-        <div class="post-header">
-          <div class="post-body">
-            <div class="post-text">I eat pizza with pineapple and I'm not sorry. Fight me. 🍍🔥</div>
-            <a href="#" class="post-link">kurs.ai</a>
-            <div class="post-meta"><span class="post-author">Dmitry</span><span class="dot">·</span><span class="post-time">12:05</span></div>
-          </div>
-          <div class="post-likes-section">
-            <button class="like-btn" aria-label="Give fire">🔥</button>
-            <span class="like-count">18</span>
-          </div>
-        </div>
-      </article>
-
-      
-      <article class="post-card">
-        <div class="post-corner"><span class="post-number">#4</span><span class="post-corner-name">@Olga</span></div>
-        <div class="post-header">
-          <div class="post-body">
-            <div class="post-text">My grandma codes better than half the devs I've worked with. She's 74. 👵💻</div>
-            <a href="#" class="post-link">t.me/financeguru</a>
-            <div class="post-meta"><span class="post-author">Olga</span><span class="dot">·</span><span class="post-time">10:48</span></div>
-          </div>
-          <div class="post-likes-section">
-            <button class="like-btn" aria-label="Give fire">🔥</button>
-            <span class="like-count">9</span>
-          </div>
-        </div>
-      </article>
-
-      
-      <article class="post-card">
-        <div class="post-corner"><span class="post-number">#5</span><span class="post-corner-name">@Anton</span></div>
-        <div class="post-header">
-          <div class="post-body">
-            <div class="post-text">Writing a book about startups. Looking for a brave co-author.</div>
-            <div class="post-meta"><span class="post-author">Anton</span><span class="dot">·</span><span class="post-time">09:20</span></div>
-          </div>
-          <div class="post-likes-section">
-            <button class="like-btn" aria-label="Give fire">🔥</button>
-            <span class="like-count">4</span>
-          </div>
-        </div>
-      </article>
-
-    </section>
-
-    
     <section class="info-section">
       <div class="info-block">
         <h3 class="info-title">How it works</h3>
@@ -191,9 +114,30 @@
 
   </main>
 
-  
-  
-  
+  <div id="authModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="modal-close" id="closeAuthBtn">&times;</span>
+      <h2 class="modal-title" id="authTitle">Create account</h2>
+      <form id="authForm">
+        <div class="form-group">
+          <label for="authEmail">Email *</label>
+          <input type="email" id="authEmail" placeholder="you@mail.com" required />
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Password *</label>
+          <input type="password" id="authPassword" placeholder="Min 6 characters" required minlength="6" />
+        </div>
+        <div class="form-group hidden" id="authUsernameGroup">
+          <label for="authUsername">Username <span class="optional">(3–20: letters, numbers, _)</span></label>
+          <input type="text" id="authUsername" placeholder="your_nickname" />
+        </div>
+        <button type="submit" class="btn-gradient" id="authSubmitBtn">Create account</button>
+        <div class="demo-note" id="authError"></div>
+      </form>
+      <button class="auth-switch" id="authSwitch">Already have an account? Sign in</button>
+    </div>
+  </div>
+
   <div id="addModal" class="modal hidden">
     <div class="modal-content">
       <span class="modal-close" id="closeModalBtn">&times;</span>
@@ -201,45 +145,39 @@
       <form id="postForm">
         <div class="form-group">
           <label for="postText">Your text *</label>
-          <textarea id="postText" rows="3" maxlength="200" placeholder="Write something cool..." required>I made a cool project!</textarea>
+          <textarea id="postText" rows="3" maxlength="200" placeholder="Write something cool..." required></textarea>
         </div>
         <div class="form-group">
           <label for="postLink">Link <span class="optional">(optional)</span></label>
-          <input type="url" id="postLink" placeholder="https://your-site.com" value="https://myproject.com" />
+          <input type="url" id="postLink" placeholder="https://your-site.com" />
         </div>
         <div class="form-group">
           <label for="postAuthor">Your name <span class="optional">(optional)</span></label>
-          <input type="text" id="postAuthor" placeholder="Your nickname" value="Alex" />
+          <input type="text" id="postAuthor" placeholder="Your nickname" />
         </div>
         <div class="price-row">
           <span class="price-label">Price</span>
           <span class="price-value">$1</span>
         </div>
         <button type="submit" class="btn-gradient" id="payBtn">Pay $1</button>
-        <div class="demo-note">Demo mode: payment is not available</div>
+        <div class="demo-note" id="postError"></div>
       </form>
     </div>
   </div>
 
-  
-  
-  
   <div id="winnerModal" class="modal hidden">
     <div class="modal-content winner-modal">
       <span class="modal-close" id="closeWinnerBtn">&times;</span>
       <div class="winner-emoji">👑</div>
       <p class="winner-eyebrow">round winner</p>
       <h2 class="winner-title">King of the round</h2>
-      <p class="winner-text" id="winnerText">🚀 Check out my new channel!</p>
-      <a href="#" class="winner-link" id="winnerLink">youtube.com/@myawesomechannel</a>
-      <div class="winner-likes" id="winnerLikes">🔥 42 fires</div>
+      <p class="winner-text" id="winnerText">No winner yet!</p>
+      <a href="#" class="winner-link" id="winnerLink2" style="display:none"></a>
+      <div class="winner-likes" id="winnerLikes">🔥 0</div>
       <button class="btn-yellow" id="winnerCloseBtn">Awesome!</button>
     </div>
   </div>
 
-  
-  
-  
   <footer class="footer">
     <div class="container">
       <p>© 2026 FlameWall — your wall of fame</p>
@@ -248,112 +186,246 @@
     </div>
   </footer>
 
-  
-  
-  
   <script>
 
+    const API = window.location.origin; // /api/... on Vercel or vercel dev
 
+    function getToken() { return localStorage.getItem('fw-token'); }
+    function setToken(t) { if (t) localStorage.setItem('fw-token', t); else localStorage.removeItem('fw-token'); }
+    function getUser() { try { return JSON.parse(localStorage.getItem('fw-user')); } catch { return null; } }
+    function setUser(u) { if (u) localStorage.setItem('fw-user', JSON.stringify(u)); else localStorage.removeItem('fw-user'); }
 
-    const openModalBtn = document.getElementById('openModalBtn');
-    const addModal = document.getElementById('addModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const postForm = document.getElementById('postForm');
+    function showError(el, msg) { if (el) el.textContent = msg || ''; }
 
-    openModalBtn.addEventListener('click', () => addModal.classList.remove('hidden'));
-    closeModalBtn.addEventListener('click', () => addModal.classList.add('hidden'));
-    addModal.addEventListener('click', (e) => { if (e.target === addModal) addModal.classList.add('hidden'); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { addModal.classList.add('hidden'); winnerModal.classList.add('hidden'); } });
+    async function api(path, opts = {}) {
+      const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+      const token = getToken();
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      const res = await fetch(API + path, { ...opts, headers });
+      let data = null;
+      try { data = await res.json(); } catch {}
+      if (!res.ok) throw new Error((data && data.error) || 'Request failed (' + res.status + ')');
+      return data;
+    }
 
-    postForm.addEventListener('submit', (e) => {
+    // ============================================
+    // THEME
+    // ============================================
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('fw-theme');
+    function applyTheme(theme) {
+      document.body.classList.toggle('light', theme === 'light');
+      themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+      localStorage.setItem('fw-theme', theme);
+    }
+    if (savedTheme) applyTheme(savedTheme); else applyTheme('light');
+    themeToggle.addEventListener('click', () => {
+      applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    // ============================================
+    // AUTH
+    // ============================================
+    const authBtn = document.getElementById('authBtn');
+    const authModal = document.getElementById('authModal');
+    const closeAuthBtn = document.getElementById('closeAuthBtn');
+    const authForm = document.getElementById('authForm');
+    const authTitle = document.getElementById('authTitle');
+    const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const authUsernameGroup = document.getElementById('authUsernameGroup');
+    const authSwitch = document.getElementById('authSwitch');
+    const authError = document.getElementById('authError');
+    let authMode = 'signup';
+
+    function refreshAuthUI() {
+      const u = getUser();
+      if (u) {
+        authBtn.textContent = '👋 ' + (u.profile?.username || u.email);
+        authBtn.classList.add('signed');
+        authBtn.title = 'Sign out';
+      } else {
+        authBtn.textContent = 'Sign in';
+        authBtn.classList.remove('signed');
+        authBtn.title = '';
+      }
+    }
+
+    authBtn.addEventListener('click', () => {
+      if (getUser()) {
+        setToken(null); setUser(null); refreshAuthUI(); window.location.reload();
+      } else {
+        authMode = 'signup';
+        setAuthMode();
+        authModal.classList.remove('hidden');
+      }
+    });
+
+    closeAuthBtn.addEventListener('click', () => authModal.classList.add('hidden'));
+    authModal.addEventListener('click', (e) => { if (e.target === authModal) authModal.classList.add('hidden'); });
+
+    authSwitch.addEventListener('click', () => {
+      authMode = authMode === 'signup' ? 'login' : 'signup';
+      setAuthMode();
+    });
+
+    function setAuthMode() {
+      authError.textContent = '';
+      const isSignup = authMode === 'signup';
+      authTitle.textContent = isSignup ? 'Create account' : 'Sign in';
+      authSubmitBtn.textContent = isSignup ? 'Create account' : 'Sign in';
+      authUsernameGroup.classList.toggle('hidden', !isSignup);
+      authSwitch.textContent = isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign up";
+    }
+
+    authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      addPostCard();
-      addModal.classList.add('hidden');
+      authError.textContent = '';
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const username = document.getElementById('authUsername').value.trim();
+      const isSignup = authMode === 'signup';
+
+      authSubmitBtn.disabled = true;
+      try {
+        if (isSignup) {
+          const d = await api('/api/register', { method: 'POST', body: JSON.stringify({ email, password, username }) });
+          const session = d.session;
+          if (session) { setToken(session.access_token); setUser({ ...d.user, profile: { username } }); }
+          else { authError.textContent = 'Check your email to confirm, then sign in.'; }
+        } else {
+          const d = await api('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+          setToken(d.session.access_token);
+          setUser({ ...d.user, profile: d.user.user_metadata });
+        }
+        refreshAuthUI();
+        if (getUser()) { authModal.classList.add('hidden'); loadRound(); }
+      } catch (err) {
+        authError.textContent = err.message;
+      } finally {
+        authSubmitBtn.disabled = false;
+      }
     });
 
+    // ============================================
+    // ROUND + POSTS
+    // ============================================
+    let currentRound = null;
 
+    async function loadRound() {
+      try {
+        const d = await api('/api/round');
+        currentRound = d.round || null;
+        renderRound(currentRound);
+      } catch (err) {
+        document.getElementById('roundStatus').textContent = 'no active round';
+        console.error(err);
+      }
+    }
 
-    const winnerModal = document.getElementById('winnerModal');
-    const closeWinnerBtn = document.getElementById('closeWinnerBtn');
-    const winnerCloseBtn = document.getElementById('winnerCloseBtn');
+    function renderRound(round) {
+      const posts = (round && round.posts) || [];
+      const pot = round ? round.pot_cents / 100 : 0;
+      const prize = round ? Math.floor(round.pot_cents / 2) / 100 : 0;
 
-    document.getElementById('heroWinner').addEventListener('click', () => winnerModal.classList.remove('hidden'));
-
-    function closeWinner() { winnerModal.classList.add('hidden'); }
-    closeWinnerBtn.addEventListener('click', closeWinner);
-    winnerCloseBtn.addEventListener('click', closeWinner);
-    winnerModal.addEventListener('click', (e) => { if (e.target === winnerModal) closeWinner(); });
-
-
-
-    document.querySelectorAll('.like-btn').forEach((btn) => {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const countEl = this.parentElement.querySelector('.like-count');
-        countEl.textContent = parseInt(countEl.textContent) + 1;
-        this.classList.add('liked');
-        this.style.transform = 'scale(1.35) rotate(-6deg)';
-        setTimeout(() => { this.style.transform = 'scale(1) rotate(0)'; }, 200);
-      });
-    });
-
-
-
-    function addPostCard() {
-      const text = document.getElementById('postText').value.trim() || 'No text';
-      const link = document.getElementById('postLink').value.trim();
-      const author = document.getElementById('postAuthor').value.trim() || 'Anonymous';
-      const now = new Date();
-      const time = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-
-      const card = document.createElement('article');
-      const num = document.querySelectorAll('.post-card').length + 2;
-      card.className = 'post-card new';
-      card.innerHTML =
-        '<div class="post-corner"><span class="post-number">#' + num + '</span><span class="post-corner-name">@' + escapeHtml(author) + '</span></div>' +
-        '<div class="post-header">' +
-          '<div class="post-body">' +
-            '<div class="post-text">' + escapeHtml(text) + '</div>' +
-            (link ? '<a href="' + escapeHtml(link) + '" class="post-link">' + escapeHtml(link.replace(/^https?:\/\//, '')) + '</a>' : '') +
-            '<div class="post-meta"><span class="post-author">' + escapeHtml(author) + '</span><span class="dot">·</span><span class="post-time">' + time + '</span></div>' +
-          '</div>' +
-          '<div class="post-likes-section"><button class="like-btn" aria-label="Give fire">🔥</button><span class="like-count">0</span></div>' +
-        '</div>';
+      document.getElementById('statPosts').textContent = posts.length;
+      document.getElementById('statPot').textContent = '$' + pot.toFixed(2).replace(/\.00$/, '');
+      document.getElementById('statPrize').textContent = '$' + prize.toFixed(2).replace(/\.00$/, '');
 
       const feed = document.getElementById('postsFeed');
-      feed.insertBefore(card, feed.firstChild);
-      card.querySelector('.like-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        const countEl = this.parentElement.querySelector('.like-count');
-        countEl.textContent = parseInt(countEl.textContent) + 1;
-        this.style.transform = 'scale(1.35) rotate(-6deg)';
-        setTimeout(() => { this.style.transform = 'scale(1) rotate(0)'; }, 200);
+      feed.innerHTML = '';
+
+      const sorted = [...posts].sort((a, b) => b.votes - a.votes || new Date(a.created_at) - new Date(b.created_at));
+
+      if (sorted.length === 0) {
+        feed.innerHTML = '<div class="empty-state">No posts yet — be the first to light up the wall! 🔥</div>';
+      }
+
+      sorted.forEach((post, i) => {
+        feed.appendChild(makePostCard(post, i + 2));
       });
-      card.classList.remove('new');
-      requestAnimationFrame(() => card.classList.add('show'));
+
+      const top = sorted[0];
+      if (top) {
+        const wh = document.getElementById('winnerHandle');
+        const wm = document.getElementById('winnerMsg');
+        const wv = document.getElementById('winnerVotes');
+        const wl = document.getElementById('winnerLink');
+        wh.innerHTML = '@' + (top.author_name || 'anonymous') + ' <span class="verified">✓</span>';
+        wm.textContent = top.text;
+        wv.textContent = '🔥 ' + top.votes;
+        if (top.link) { wl.style.display = ''; wl.textContent = top.link.replace(/^https?:\/\//, ''); wl.href = top.link; }
+        else { wl.style.display = 'none'; }
+      }
+
+      startTimer(round ? round.ends_at : null);
+    }
+
+    function makePostCard(post, num) {
+      const card = document.createElement('article');
+      card.className = 'post-card show';
+      card.dataset.id = post.id;
+      card.innerHTML =
+        '<div class="post-corner"><span class="post-number">#' + num + '</span><span class="post-corner-name">@' + escapeHtml(post.author_name || 'anonymous') + '</span></div>' +
+        '<div class="post-header">' +
+          '<div class="post-body">' +
+            '<div class="post-text">' + escapeHtml(post.text) + '</div>' +
+            (post.link ? '<a href="' + escapeHtml(post.link) + '" class="post-link" target="_blank" rel="noopener">' + escapeHtml(post.link.replace(/^https?:\/\//, '')) + '</a>' : '') +
+            '<div class="post-meta"><span class="post-author">' + escapeHtml(post.author_name || 'anonymous') + '</span><span class="dot">·</span><span class="post-time">' + formatTime(post.created_at) + '</span></div>' +
+          '</div>' +
+          '<div class="post-likes-section"><button class="like-btn" aria-label="Give fire">🔥</button><span class="like-count">' + (post.votes || 0) + '</span></div>' +
+        '</div>';
+      card.querySelector('.like-btn').addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!getUser()) { authModal.classList.remove('hidden'); return; }
+        const btn = e.currentTarget;
+        try {
+          const d = await api('/api/vote', { method: 'POST', body: JSON.stringify({ post_id: post.id }) });
+          btn.parentElement.querySelector('.like-count').textContent = d.votes;
+          btn.classList.add('liked');
+          btn.style.transform = 'scale(1.35) rotate(-6deg)';
+          setTimeout(() => { btn.style.transform = 'scale(1) rotate(0)'; }, 200);
+          loadRound();
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+      return card;
+    }
+
+    function formatTime(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
     }
 
     function escapeHtml(s) {
       const d = document.createElement('div');
-      d.textContent = s;
+      d.textContent = s == null ? '' : String(s);
       return d.innerHTML;
     }
 
-
-
-    function updateDemoTimer() {
-      const deadline = new Date();
-      deadline.setHours(deadline.getHours() + 24);
-      const start = new Date();
-
+    // ============================================
+    // TIMER
+    // ============================================
+    let timerInterval = null;
+    function startTimer(endsAtIso) {
+      if (timerInterval) clearInterval(timerInterval);
       const timerEl = document.getElementById('timer');
       const statusEl = document.getElementById('roundStatus');
       const barEl = document.querySelector('.timer-bar');
 
+      if (!endsAtIso) {
+        timerEl.textContent = '--h --m --s';
+        statusEl.textContent = 'no active round';
+        barEl.style.width = '0%';
+        return;
+      }
+
+      const ends = new Date(endsAtIso).getTime();
+
       function tick() {
-        const now = new Date();
-        const diff = deadline - now;
-        const total = deadline - start;
+        const now = Date.now();
+        const diff = ends - now;
 
         if (diff <= 0) {
           timerEl.textContent = '⏰ Round over';
@@ -361,9 +433,11 @@
           document.querySelector('.btn-primary').style.opacity = '0';
           document.querySelector('.btn-primary').style.pointerEvents = 'none';
           barEl.style.width = '100%';
+          clearInterval(timerInterval);
           return;
         }
 
+        const total = 24 * 60 * 60 * 1000;
         const h = Math.floor(diff / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
@@ -372,54 +446,103 @@
           String(h).padStart(2, '0') + 'h ' +
           String(m).padStart(2, '0') + 'm ' +
           String(s).padStart(2, '0') + 's';
-
-        barEl.style.width = ((1 - diff / total) * 100).toFixed(2) + '%';
+        barEl.style.width = Math.max(0, Math.min(100, ((total - diff) / total) * 100)).toFixed(2) + '%';
       }
 
       tick();
-      setInterval(tick, 1000);
+      timerInterval = setInterval(tick, 1000);
     }
 
-    updateDemoTimer();
+    // ============================================
+    // ADD POST
+    // ============================================
+    const openModalBtn = document.getElementById('openModalBtn');
+    const addModal = document.getElementById('addModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const postForm = document.getElementById('postForm');
+    const postError = document.getElementById('postError');
 
+    openModalBtn.addEventListener('click', () => {
+      if (!getUser()) { authModal.classList.remove('hidden'); return; }
+      postError.textContent = '';
+      const u = getUser();
+      if (u.profile?.username) document.getElementById('postAuthor').value = u.profile.username;
+      addModal.classList.remove('hidden');
+    });
+    closeModalBtn.addEventListener('click', () => addModal.classList.add('hidden'));
+    addModal.addEventListener('click', (e) => { if (e.target === addModal) addModal.classList.add('hidden'); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { addModal.classList.add('hidden'); authModal.classList.add('hidden'); winnerModal.classList.add('hidden'); }
+    });
 
+    postForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      postError.textContent = '';
+      const text = document.getElementById('postText').value.trim();
+      const link = document.getElementById('postLink').value.trim();
+      const author = document.getElementById('postAuthor').value.trim() || (getUser()?.profile?.username || 'anonymous');
 
+      const btn = document.getElementById('payBtn');
+      btn.disabled = true;
+      try {
+        await api('/api/post', {
+          method: 'POST',
+          body: JSON.stringify({ text, link, author_name: author, demo_payment: true }),
+        });
+        addModal.classList.add('hidden');
+        postForm.reset();
+        loadRound();
+      } catch (err) {
+        postError.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // ============================================
+    // WINNER MODAL
+    // ============================================
+    const winnerModal = document.getElementById('winnerModal');
+    const closeWinnerBtn = document.getElementById('closeWinnerBtn');
+    const winnerCloseBtn = document.getElementById('winnerCloseBtn');
+
+    document.getElementById('heroWinner').addEventListener('click', () => {
+      const top = currentRound && currentRound.posts && currentRound.posts.length
+        ? [...currentRound.posts].sort((a, b) => b.votes - a.votes)[0]
+        : null;
+      if (top) {
+        document.getElementById('winnerText').textContent = top.text;
+        const l2 = document.getElementById('winnerLink2');
+        if (top.link) { l2.style.display = ''; l2.textContent = top.link.replace(/^https?:\/\//, ''); l2.href = top.link; }
+        else l2.style.display = 'none';
+        document.getElementById('winnerLikes').textContent = '🔥 ' + top.votes;
+      }
+      winnerModal.classList.remove('hidden');
+    });
+
+    function closeWinner() { winnerModal.classList.add('hidden'); }
+    closeWinnerBtn.addEventListener('click', closeWinner);
+    winnerCloseBtn.addEventListener('click', closeWinner);
+    winnerModal.addEventListener('click', (e) => { if (e.target === winnerModal) closeWinner(); });
+
+    // ============================================
+    // SCROLL REVEAL
+    // ============================================
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) entry.target.classList.add('show');
       });
     }, { threshold: 0.08 });
+    document.querySelectorAll('.info-block').forEach((el) => observer.observe(el));
 
-    document.querySelectorAll('.post-card, .info-block').forEach((el) => observer.observe(el));
-
-
-    const themeToggle = document.getElementById('themeToggle');
-    const savedTheme = localStorage.getItem('fw-theme');
-
-    function applyTheme(theme) {
-      document.body.classList.toggle('light', theme === 'light');
-      themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
-      localStorage.setItem('fw-theme', theme);
-    }
-
-    if (savedTheme) applyTheme(savedTheme); else applyTheme('light');
-
-    themeToggle.addEventListener('click', () => {
-      const next = document.body.classList.contains('light') ? 'dark' : 'light';
-      applyTheme(next);
-    });
-
-
+    // ============================================
+    // INIT
+    // ============================================
     const fomoEl = document.getElementById('fomoSlots');
-    let slots = parseInt(fomoEl.textContent);
-    setInterval(() => {
-      if (slots > 1) {
-        slots -= 1;
-        fomoEl.textContent = slots;
-      }
-    }, 20000);
-
-    console.log('🔥 FlameWall — demo ready!');
+    fomoEl.textContent = '99';
+    refreshAuthUI();
+    loadRound();
+    console.log('🔥 FlameWall ready');
   </script>
 
 </body>

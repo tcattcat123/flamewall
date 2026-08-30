@@ -11,9 +11,9 @@ export async function GET(req) {
     .eq('status', 'active')
     .order('created_at', { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
-  if (error) return json({ error: error.message }, 500);
+  if (error && error.code !== 'PGRST116') return json({ error: error.message }, 500);
 
-  return json({ round: data });
+  return json({ round: data || null });
 }
