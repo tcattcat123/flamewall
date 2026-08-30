@@ -862,11 +862,6 @@ body {
   margin: 0 0 40px;
 }
 
-.footer-stats {
-  margin: -20px 0 40px;
-  text-align: center;
-}
-
 .info-block {
   background: var(--surface);
   border: 1px solid var(--border);
