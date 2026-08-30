@@ -58,6 +58,7 @@ create table if not exists public.votes (
 create index if not exists idx_posts_round on public.posts (round_id, votes desc);
 create index if not exists idx_votes_post on public.votes (post_id);
 create index if not exists idx_rounds_status on public.rounds (status);
+create unique index if not exists uq_posts_round_tweet on public.posts (round_id, tweet_id) where tweet_id is not null;
 
 -- ============================================================
 -- INCREMENT POST VOTES (atomic)

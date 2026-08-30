@@ -56,6 +56,17 @@ export async function POST(req) {
     const roundId = round?.id;
     if (!roundId) return json({ error: 'No active round' }, 409);
 
+    // Prevent duplicate tweet posts in the same round
+    if (finalTweetId) {
+      const { data: dup } = await supabase
+        .from('posts')
+        .select('id')
+        .eq('round_id', roundId)
+        .eq('tweet_id', finalTweetId)
+        .maybeSingle();
+      if (dup) return json({ error: 'This tweet is already on the wall' }, 409);
+    }
+
     const { data: post, error: insertError } = await admin
       .from('posts')
       .insert({
@@ -66,6 +77,7 @@ export async function POST(req) {
         link: finalLink || null,
         avatar_url: finalAvatar,
         tweet_id: finalTweetId,
+        votes: tweetData ? tweetData.likes : 0,
         paid: true,
       })
       .select('*')

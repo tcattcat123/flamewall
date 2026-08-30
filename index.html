@@ -281,7 +281,9 @@
         '</div>';
       card.querySelector('.like-btn').addEventListener('click', async (e) => {
         e.stopPropagation();
+        if (e.currentTarget.classList.contains('voting')) return;
         const btn = e.currentTarget;
+        btn.classList.add('voting');
         try {
           const d = await api('/api/vote', { method: 'POST', body: JSON.stringify({ post_id: post.id, user_id: getUserId() }) });
           btn.parentElement.querySelector('.like-count').textContent = d.votes;
@@ -290,10 +292,25 @@
           setTimeout(() => { btn.style.transform = 'scale(1) rotate(0)'; }, 200);
           loadRound();
         } catch (err) {
-          alert(err.message);
+          showToast(err.message);
+        } finally {
+          btn.classList.remove('voting');
         }
       });
       return card;
+    }
+
+    function showToast(msg) {
+      let t = document.getElementById('toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), 3000);
     }
 
     function formatTime(dateRaw) {

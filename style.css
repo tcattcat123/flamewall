@@ -986,6 +986,30 @@ body {
   font-size: 1rem;
 }
 
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  opacity: 0;
+  z-index: 9999;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  color: var(--text);
+  backdrop-filter: blur(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .modal-content {
   background: linear-gradient(165deg, #17171d, #101014);
   border: 1px solid rgba(255, 122, 50, 0.18);
