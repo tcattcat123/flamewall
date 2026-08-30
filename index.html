@@ -218,7 +218,7 @@
       const feed = document.getElementById('postsFeed');
       feed.innerHTML = '';
 
-      const sorted = [...posts].sort((a, b) => b.votes - a.votes || new Date(a.created_at) - new Date(b.created_at));
+      const sorted = [...posts].sort((a, b) => b.votes - a.votes || (parseDbDate(a.created_at)?.getTime() || 0) - (parseDbDate(b.created_at)?.getTime() || 0));
 
       if (sorted.length === 0) {
         feed.innerHTML = '<div class="empty-state">No posts yet — be the first to light up the wall! 🔥</div>';
@@ -284,9 +284,9 @@
       return card;
     }
 
-    function formatTime(iso) {
-      if (!iso) return '';
-      const d = new Date(iso);
+    function formatTime(dateRaw) {
+      const d = parseDbDate(dateRaw);
+      if (!d) return '';
       return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
     }
 
@@ -300,24 +300,34 @@
     // TIMER
     // ============================================
     let timerInterval = null;
-    function startTimer(endsAtIso) {
+
+    function parseDbDate(s) {
+      if (!s) return null;
+      // Postgres может вернуть "2026-08-31 00:36:19.903297+00" —
+      // заменяем пробел на T и обрезаем микросекунды, чтобы Date мог распарсить.
+      const iso = String(s).trim().replace(' ', 'T').replace(/\.\d{3,}/, (m) => m.slice(0, 4));
+      const d = new Date(iso);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function startTimer(endsAtRaw) {
       if (timerInterval) clearInterval(timerInterval);
       const timerEl = document.getElementById('timer');
       const statusEl = document.getElementById('roundStatus');
       const barEl = document.querySelector('.timer-bar');
 
-      if (!endsAtIso) {
+      const ends = parseDbDate(endsAtRaw);
+      if (!ends) {
         timerEl.textContent = '--h --m --s';
         statusEl.textContent = 'no active round';
         barEl.style.width = '0%';
         return;
       }
-
-      const ends = new Date(endsAtIso).getTime();
+      const endsMs = ends.getTime();
 
       function tick() {
         const now = Date.now();
-        const diff = ends - now;
+        const diff = endsMs - now;
 
         if (diff <= 0) {
           timerEl.textContent = '⏰ Round over';
