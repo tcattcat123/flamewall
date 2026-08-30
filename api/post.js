@@ -1,6 +1,5 @@
 import { supabase, admin } from '../lib/supabase.js';
 import { handleOptions, json, readJson } from '../lib/http.js';
-import { requireUser } from '../lib/auth.js';
 
 const POST_PRICE_CENTS = Number(process.env.POST_PRICE_CENTS || 100);
 
@@ -8,13 +7,11 @@ export async function POST(req) {
   const opt = handleOptions(req);
   if (opt) return opt;
 
-  const { user, error } = await requireUser(req);
-  if (error) return json(error, error.status);
-
   const body = await readJson(req);
   const text = String(body.text || '').trim();
   const link = String(body.link || '').trim();
-  const authorName = String(body.author_name || user.user_metadata?.username || 'anonymous').trim();
+  const authorName = String(body.author_name || 'anonymous').trim();
+  const userId = String(body.user_id || '').trim();
 
   if (!text || text.length > 200) {
     return json({ error: 'Text is required (max 200 chars)' }, 400);
@@ -22,8 +19,10 @@ export async function POST(req) {
   if (link && !/^https?:\/\//i.test(link)) {
     return json({ error: 'Link must start with http(s)://' }, 400);
   }
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId)) {
+    return json({ error: 'user_id (anonymous uuid) is required' }, 400);
+  }
 
-  // TODO: integrate real payment gateway here.
   const paymentConfirmed = body.demo_payment === true || process.env.DEMO_MODE === 'true';
   if (!paymentConfirmed) {
     return json({ error: `Payment of $${(POST_PRICE_CENTS / 100).toFixed(2)} is required.` }, 402);
@@ -46,7 +45,7 @@ export async function POST(req) {
     .from('posts')
     .insert({
       round_id: roundId,
-      user_id: user.id,
+      user_id: userId,
       author_name: authorName,
       text,
       link: link || null,

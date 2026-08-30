@@ -1,21 +1,11 @@
 -- ============================================================
 -- FlameWall — Supabase schema (PostgreSQL)
--- Run in Supabase SQL Editor
+-- Anonymous users: no accounts. Every visitor gets a UUID in
+-- localStorage, used for votes (1 vote per user per post) and
+-- optionally stored on posts.
 -- ============================================================
 
 create extension if not exists "pgcrypto";
-
--- ============================================================
--- PROFILES
--- One row per user, joined to auth.users
--- ============================================================
-create table if not exists public.profiles (
-  id uuid primary key references auth.users (id) on delete cascade,
-  username text unique not null,
-  display_name text,
-  created_at timestamptz not null default now(),
-  avatar_url text
-);
 
 -- ============================================================
 -- ROUNDS
@@ -36,11 +26,12 @@ create table if not exists public.rounds (
 -- ============================================================
 -- POSTS
 -- A paid post lives until the end of its round.
+-- user_id is an anonymous UUID from the visitor's localStorage.
 -- ============================================================
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
   round_id uuid not null references public.rounds (id) on delete cascade,
-  user_id uuid references auth.users (id) on delete set null,
+  user_id text,
   author_name text not null default 'anonymous',
   text text not null check (char_length(text) between 1 and 200),
   link text check (link is null or char_length(link) <= 300),
@@ -52,11 +43,12 @@ create table if not exists public.posts (
 -- ============================================================
 -- VOTES
 -- One vote per user per post (unique constraint).
+-- user_id is an anonymous UUID from localStorage.
 -- ============================================================
 create table if not exists public.votes (
   id uuid primary key default gen_random_uuid(),
   post_id uuid not null references public.posts (id) on delete cascade,
-  user_id uuid not null references auth.users (id) on delete cascade,
+  user_id text not null,
   created_at timestamptz not null default now(),
   unique (post_id, user_id)
 );
@@ -83,31 +75,6 @@ begin
   return coalesce(new_votes, 1);
 end;
 $$;
-
--- ============================================================
--- AUTO-CREATE PROFILE ON SIGNUP
--- ============================================================
-create or replace function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer set search_path = public
-as $$
-begin
-  insert into public.profiles (id, username, display_name)
-  values (
-    new.id,
-    coalesce(new.raw_user_meta_data->>'username', 'user_' || substr(new.id::text, 1, 8)),
-    coalesce(new.raw_user_meta_data->>'display_name', new.raw_user_meta_data->>'username')
-  )
-  on conflict (id) do nothing;
-  return new;
-end;
-$$;
-
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
 
 -- ============================================================
 -- AUTO-CLOSE ROUNDS + DECLARE WINNER
@@ -145,3 +112,20 @@ begin
   return closed;
 end;
 $$;
+
+-- ============================================================
+-- ROW LEVEL SECURITY
+-- Public reads OK; writes only via service role (the /api layer).
+-- ============================================================
+alter table public.rounds enable row level security;
+alter table public.posts enable row level security;
+alter table public.votes enable row level security;
+
+create policy "public can read rounds" on public.rounds
+  for select using (true);
+
+create policy "public can read posts" on public.posts
+  for select using (true);
+
+create policy "public can read votes" on public.votes
+  for select using (true);

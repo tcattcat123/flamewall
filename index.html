@@ -28,7 +28,6 @@
 
   <header class="header">
     <div class="container">
-      <button id="authBtn" class="auth-btn">Sign in</button>
       <div class="hero">
         <div class="hero-inner">
           <h1 class="logo">Flame<span class="logo-accent">Wall</span></h1>
@@ -114,30 +113,6 @@
 
   </main>
 
-  <div id="authModal" class="modal hidden">
-    <div class="modal-content">
-      <span class="modal-close" id="closeAuthBtn">&times;</span>
-      <h2 class="modal-title" id="authTitle">Create account</h2>
-      <form id="authForm">
-        <div class="form-group">
-          <label for="authEmail">Email *</label>
-          <input type="email" id="authEmail" placeholder="you@mail.com" required />
-        </div>
-        <div class="form-group">
-          <label for="authPassword">Password *</label>
-          <input type="password" id="authPassword" placeholder="Min 6 characters" required minlength="6" />
-        </div>
-        <div class="form-group hidden" id="authUsernameGroup">
-          <label for="authUsername">Username <span class="optional">(3–20: letters, numbers, _)</span></label>
-          <input type="text" id="authUsername" placeholder="your_nickname" />
-        </div>
-        <button type="submit" class="btn-gradient" id="authSubmitBtn">Create account</button>
-        <div class="demo-note" id="authError"></div>
-      </form>
-      <button class="auth-switch" id="authSwitch">Already have an account? Sign in</button>
-    </div>
-  </div>
-
   <div id="addModal" class="modal hidden">
     <div class="modal-content">
       <span class="modal-close" id="closeModalBtn">&times;</span>
@@ -188,19 +163,19 @@
 
   <script>
 
-    const API = window.location.origin; // /api/... on Vercel or vercel dev
+    const API = window.location.origin;
 
-    function getToken() { return localStorage.getItem('fw-token'); }
-    function setToken(t) { if (t) localStorage.setItem('fw-token', t); else localStorage.removeItem('fw-token'); }
-    function getUser() { try { return JSON.parse(localStorage.getItem('fw-user')); } catch { return null; } }
-    function setUser(u) { if (u) localStorage.setItem('fw-user', JSON.stringify(u)); else localStorage.removeItem('fw-user'); }
-
-    function showError(el, msg) { if (el) el.textContent = msg || ''; }
+    function getUserId() {
+      let id = localStorage.getItem('fw-anon-id');
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem('fw-anon-id', id);
+      }
+      return id;
+    }
 
     async function api(path, opts = {}) {
       const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
-      const token = getToken();
-      if (token) headers['Authorization'] = 'Bearer ' + token;
       const res = await fetch(API + path, { ...opts, headers });
       let data = null;
       try { data = await res.json(); } catch {}
@@ -221,89 +196,6 @@
     if (savedTheme) applyTheme(savedTheme); else applyTheme('light');
     themeToggle.addEventListener('click', () => {
       applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
-    });
-
-    // ============================================
-    // AUTH
-    // ============================================
-    const authBtn = document.getElementById('authBtn');
-    const authModal = document.getElementById('authModal');
-    const closeAuthBtn = document.getElementById('closeAuthBtn');
-    const authForm = document.getElementById('authForm');
-    const authTitle = document.getElementById('authTitle');
-    const authSubmitBtn = document.getElementById('authSubmitBtn');
-    const authUsernameGroup = document.getElementById('authUsernameGroup');
-    const authSwitch = document.getElementById('authSwitch');
-    const authError = document.getElementById('authError');
-    let authMode = 'signup';
-
-    function refreshAuthUI() {
-      const u = getUser();
-      if (u) {
-        authBtn.textContent = '👋 ' + (u.profile?.username || u.email);
-        authBtn.classList.add('signed');
-        authBtn.title = 'Sign out';
-      } else {
-        authBtn.textContent = 'Sign in';
-        authBtn.classList.remove('signed');
-        authBtn.title = '';
-      }
-    }
-
-    authBtn.addEventListener('click', () => {
-      if (getUser()) {
-        setToken(null); setUser(null); refreshAuthUI(); window.location.reload();
-      } else {
-        authMode = 'signup';
-        setAuthMode();
-        authModal.classList.remove('hidden');
-      }
-    });
-
-    closeAuthBtn.addEventListener('click', () => authModal.classList.add('hidden'));
-    authModal.addEventListener('click', (e) => { if (e.target === authModal) authModal.classList.add('hidden'); });
-
-    authSwitch.addEventListener('click', () => {
-      authMode = authMode === 'signup' ? 'login' : 'signup';
-      setAuthMode();
-    });
-
-    function setAuthMode() {
-      authError.textContent = '';
-      const isSignup = authMode === 'signup';
-      authTitle.textContent = isSignup ? 'Create account' : 'Sign in';
-      authSubmitBtn.textContent = isSignup ? 'Create account' : 'Sign in';
-      authUsernameGroup.classList.toggle('hidden', !isSignup);
-      authSwitch.textContent = isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign up";
-    }
-
-    authForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      authError.textContent = '';
-      const email = document.getElementById('authEmail').value.trim();
-      const password = document.getElementById('authPassword').value;
-      const username = document.getElementById('authUsername').value.trim();
-      const isSignup = authMode === 'signup';
-
-      authSubmitBtn.disabled = true;
-      try {
-        if (isSignup) {
-          const d = await api('/api/register', { method: 'POST', body: JSON.stringify({ email, password, username }) });
-          const session = d.session;
-          if (session) { setToken(session.access_token); setUser({ ...d.user, profile: { username } }); }
-          else { authError.textContent = 'Check your email to confirm, then sign in.'; }
-        } else {
-          const d = await api('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) });
-          setToken(d.session.access_token);
-          setUser({ ...d.user, profile: d.user.user_metadata });
-        }
-        refreshAuthUI();
-        if (getUser()) { authModal.classList.add('hidden'); loadRound(); }
-      } catch (err) {
-        authError.textContent = err.message;
-      } finally {
-        authSubmitBtn.disabled = false;
-      }
     });
 
     // ============================================
@@ -376,10 +268,9 @@
         '</div>';
       card.querySelector('.like-btn').addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (!getUser()) { authModal.classList.remove('hidden'); return; }
         const btn = e.currentTarget;
         try {
-          const d = await api('/api/vote', { method: 'POST', body: JSON.stringify({ post_id: post.id }) });
+          const d = await api('/api/vote', { method: 'POST', body: JSON.stringify({ post_id: post.id, user_id: getUserId() }) });
           btn.parentElement.querySelector('.like-count').textContent = d.votes;
           btn.classList.add('liked');
           btn.style.transform = 'scale(1.35) rotate(-6deg)';
@@ -463,16 +354,13 @@
     const postError = document.getElementById('postError');
 
     openModalBtn.addEventListener('click', () => {
-      if (!getUser()) { authModal.classList.remove('hidden'); return; }
       postError.textContent = '';
-      const u = getUser();
-      if (u.profile?.username) document.getElementById('postAuthor').value = u.profile.username;
       addModal.classList.remove('hidden');
     });
     closeModalBtn.addEventListener('click', () => addModal.classList.add('hidden'));
     addModal.addEventListener('click', (e) => { if (e.target === addModal) addModal.classList.add('hidden'); });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { addModal.classList.add('hidden'); authModal.classList.add('hidden'); winnerModal.classList.add('hidden'); }
+      if (e.key === 'Escape') { addModal.classList.add('hidden'); winnerModal.classList.add('hidden'); }
     });
 
     postForm.addEventListener('submit', async (e) => {
@@ -480,14 +368,14 @@
       postError.textContent = '';
       const text = document.getElementById('postText').value.trim();
       const link = document.getElementById('postLink').value.trim();
-      const author = document.getElementById('postAuthor').value.trim() || (getUser()?.profile?.username || 'anonymous');
+      const author = document.getElementById('postAuthor').value.trim() || 'anonymous';
 
       const btn = document.getElementById('payBtn');
       btn.disabled = true;
       try {
         await api('/api/post', {
           method: 'POST',
-          body: JSON.stringify({ text, link, author_name: author, demo_payment: true }),
+          body: JSON.stringify({ text, link, author_name: author, user_id: getUserId(), demo_payment: true }),
         });
         addModal.classList.add('hidden');
         postForm.reset();
@@ -540,7 +428,7 @@
     // ============================================
     const fomoEl = document.getElementById('fomoSlots');
     fomoEl.textContent = '99';
-    refreshAuthUI();
+    getUserId();
     loadRound();
     console.log('🔥 FlameWall ready');
   </script>
