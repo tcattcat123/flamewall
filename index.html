@@ -89,8 +89,8 @@
 
     <section class="add-post-section">
       <button class="btn-primary" id="openModalBtn">
-        <span>✍️ Add post</span>
-        <span class="btn-price">$1</span>
+        <span>✍️ Free slots</span>
+        <span class="btn-price" id="freeSlotsBtn">99</span>
       </button>
     </section>
 
@@ -119,16 +119,8 @@
       <h2 class="modal-title">Add post</h2>
       <form id="postForm">
         <div class="form-group">
-          <label for="postText">Your text *</label>
-          <textarea id="postText" rows="3" maxlength="200" placeholder="Write something cool..." required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="postLink">Link <span class="optional">(optional)</span></label>
-          <input type="url" id="postLink" placeholder="https://your-site.com" />
-        </div>
-        <div class="form-group">
-          <label for="postAuthor">Your name <span class="optional">(optional)</span></label>
-          <input type="text" id="postAuthor" placeholder="Your nickname" />
+          <label for="postTweetUrl">Twitter / X link *</label>
+          <input type="url" id="postTweetUrl" placeholder="https://x.com/user/status/123" required />
         </div>
         <div class="price-row">
           <span class="price-label">Price</span>
@@ -242,9 +234,15 @@
         const wm = document.getElementById('winnerMsg');
         const wv = document.getElementById('winnerVotes');
         const wl = document.getElementById('winnerLink');
+        const wAv = document.querySelector('.hero-winner-avatar');
         wh.innerHTML = '@' + (top.author_name || 'anonymous') + ' <span class="verified">✓</span>';
         wm.textContent = top.text;
         wv.textContent = '🔥 ' + top.votes;
+        if (top.avatar_url) {
+          wAv.innerHTML = '<img src="' + escapeHtml(top.avatar_url) + '" alt="" />';
+        } else {
+          wAv.textContent = (top.author_name || 'a').charAt(0).toUpperCase();
+        }
         if (top.link) { wl.style.display = ''; wl.textContent = top.link.replace(/^https?:\/\//, ''); wl.href = top.link; }
         else { wl.style.display = 'none'; }
       }
@@ -256,13 +254,16 @@
       const card = document.createElement('article');
       card.className = 'post-card show';
       card.dataset.id = post.id;
+      const avatar = post.avatar_url
+        ? '<img class="post-avatar" src="' + escapeHtml(post.avatar_url) + '" alt="" loading="lazy" />'
+        : '';
       card.innerHTML =
         '<div class="post-corner"><span class="post-number">#' + num + '</span><span class="post-corner-name">@' + escapeHtml(post.author_name || 'anonymous') + '</span></div>' +
         '<div class="post-header">' +
           '<div class="post-body">' +
+            '<div class="post-meta">' + avatar + '<span class="post-author">' + escapeHtml(post.author_name || 'anonymous') + '</span><span class="dot">·</span><span class="post-time">' + formatTime(post.created_at) + '</span></div>' +
             '<div class="post-text">' + escapeHtml(post.text) + '</div>' +
             (post.link ? '<a href="' + escapeHtml(post.link) + '" class="post-link" target="_blank" rel="noopener">' + escapeHtml(post.link.replace(/^https?:\/\//, '')) + '</a>' : '') +
-            '<div class="post-meta"><span class="post-author">' + escapeHtml(post.author_name || 'anonymous') + '</span><span class="dot">·</span><span class="post-time">' + formatTime(post.created_at) + '</span></div>' +
           '</div>' +
           '<div class="post-likes-section"><button class="like-btn" aria-label="Give fire">🔥</button><span class="like-count">' + (post.votes || 0) + '</span></div>' +
         '</div>';
@@ -366,24 +367,25 @@
     postForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       postError.textContent = '';
-      const text = document.getElementById('postText').value.trim();
-      const link = document.getElementById('postLink').value.trim();
-      const author = document.getElementById('postAuthor').value.trim() || 'anonymous';
+      const tweetUrl = document.getElementById('postTweetUrl').value.trim();
 
       const btn = document.getElementById('payBtn');
       btn.disabled = true;
+      btn.textContent = 'Loading tweet…';
       try {
         await api('/api/post', {
           method: 'POST',
-          body: JSON.stringify({ text, link, author_name: author, user_id: getUserId(), demo_payment: true }),
+          body: JSON.stringify({ tweet_url: tweetUrl, user_id: getUserId(), demo_payment: true }),
         });
         addModal.classList.add('hidden');
         postForm.reset();
+        consumeFreeSlot();
         loadRound();
       } catch (err) {
         postError.textContent = err.message;
       } finally {
         btn.disabled = false;
+        btn.textContent = 'Pay $1';
       }
     });
 
@@ -404,8 +406,7 @@
         if (top.link) { l2.style.display = ''; l2.textContent = top.link.replace(/^https?:\/\//, ''); l2.href = top.link; }
         else l2.style.display = 'none';
         document.getElementById('winnerLikes').textContent = '🔥 ' + top.votes;
-      }
-      winnerModal.classList.remove('hidden');
+      }      winnerModal.classList.remove('hidden');
     });
 
     function closeWinner() { winnerModal.classList.add('hidden'); }
@@ -424,11 +425,40 @@
     document.querySelectorAll('.info-block').forEach((el) => observer.observe(el));
 
     // ============================================
+    // FREE SLOTS (FOMO counter)
+    // ============================================
+    let freeSlots = parseInt(localStorage.getItem('fw-free-slots')) || 99;
+
+    function renderFreeSlots() {
+      const badge = document.getElementById('freeSlotsBtn');
+      const openBtn = document.getElementById('openModalBtn');
+      const btnLabel = openBtn.querySelector('span:first-child');
+      const fomoEl = document.getElementById('fomoSlots');
+
+      if (fomoEl) fomoEl.textContent = freeSlots;
+
+      if (freeSlots > 0) {
+        if (badge) badge.textContent = freeSlots;
+        openBtn.classList.remove('paid-mode');
+        if (btnLabel) btnLabel.textContent = '✍️ Free slots';
+      } else {
+        if (badge) badge.textContent = '$1';
+        openBtn.classList.add('paid-mode');
+        if (btnLabel) btnLabel.textContent = '✍️ Add post';
+      }
+    }
+
+    function consumeFreeSlot() {
+      if (freeSlots > 0) freeSlots -= 1;
+      localStorage.setItem('fw-free-slots', freeSlots);
+      renderFreeSlots();
+    }
+
+    // ============================================
     // INIT
     // ============================================
-    const fomoEl = document.getElementById('fomoSlots');
-    fomoEl.textContent = '99';
     getUserId();
+    renderFreeSlots();
     loadRound();
     console.log('🔥 FlameWall ready');
   </script>

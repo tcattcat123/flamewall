@@ -35,6 +35,8 @@ create table if not exists public.posts (
   author_name text not null default 'anonymous',
   text text not null check (char_length(text) between 1 and 200),
   link text check (link is null or char_length(link) <= 300),
+  avatar_url text,
+  tweet_id text,
   votes integer not null default 0,
   paid boolean not null default false,
   created_at timestamptz not null default now()

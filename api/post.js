@@ -1,5 +1,6 @@
 import { supabase, admin } from '../lib/supabase.js';
 import { handleOptions, json, readJson } from '../lib/http.js';
+import { fetchTweet } from '../lib/tweet.js';
 
 const POST_PRICE_CENTS = Number(process.env.POST_PRICE_CENTS || 100);
 
@@ -9,14 +10,30 @@ export async function POST(req) {
 
   const body = await readJson(req);
   const text = String(body.text || '').trim();
+  const tweetUrl = String(body.tweet_url || '').trim();
   const link = String(body.link || '').trim();
   const authorName = String(body.author_name || 'anonymous').trim();
   const userId = String(body.user_id || '').trim();
 
-  if (!text || text.length > 200) {
+  let tweetData = null;
+  if (tweetUrl) {
+    try {
+      tweetData = await fetchTweet(tweetUrl);
+    } catch (err) {
+      return json({ error: err.message }, err.status || 400);
+    }
+  }
+
+  const finalText = tweetData ? tweetData.text.slice(0, 200) : text;
+  const finalLink = tweetData ? tweetData.link : link;
+  const finalAuthor = tweetData ? tweetData.author_name : authorName;
+  const finalAvatar = tweetData ? tweetData.avatar_url : null;
+  const finalTweetId = tweetData ? tweetData.tweet_id : null;
+
+  if (!finalText || finalText.length > 200) {
     return json({ error: 'Text is required (max 200 chars)' }, 400);
   }
-  if (link && !/^https?:\/\//i.test(link)) {
+  if (finalLink && !/^https?:\/\//i.test(finalLink)) {
     return json({ error: 'Link must start with http(s)://' }, 400);
   }
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId)) {
@@ -46,9 +63,11 @@ export async function POST(req) {
     .insert({
       round_id: roundId,
       user_id: userId,
-      author_name: authorName,
-      text,
-      link: link || null,
+      author_name: finalAuthor,
+      text: finalText,
+      link: finalLink || null,
+      avatar_url: finalAvatar,
+      tweet_id: finalTweetId,
       paid: true,
     })
     .select('*')
