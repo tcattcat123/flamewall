@@ -1,8 +1,10 @@
 import { supabase, admin } from '../lib/supabase.js';
-import { handleOptions, json, readJson } from '../lib/http.js';
+import { handleOptions, json, readJson, options } from '../lib/http.js';
 import { fetchTweet } from '../lib/tweet.js';
 
 const POST_PRICE_CENTS = Number(process.env.POST_PRICE_CENTS || 100);
+
+export { options as OPTIONS };
 
 export async function POST(req) {
   try {
@@ -20,7 +22,11 @@ export async function POST(req) {
 
     let tweetData = null;
     if (tweetUrl) {
-      tweetData = await fetchTweet(tweetUrl);
+      try {
+        tweetData = await fetchTweet(tweetUrl);
+      } catch (err) {
+        return json({ error: err.message }, err.status || 400);
+      }
     }
 
     const finalText = tweetData ? tweetData.text.slice(0, 200) : text;

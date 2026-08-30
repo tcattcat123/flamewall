@@ -1,5 +1,7 @@
 import { supabase, admin } from '../lib/supabase.js';
-import { handleOptions, json, readJson } from '../lib/http.js';
+import { handleOptions, json, readJson, options } from '../lib/http.js';
+
+export { options as OPTIONS };
 
 export async function POST(req) {
   const opt = handleOptions(req);
