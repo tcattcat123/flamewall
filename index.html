@@ -263,7 +263,7 @@
         else { wl.style.display = 'none'; }
       }
 
-      startTimer(round ? round.ends_at : null);
+      startTimer(round);
     }
 
     function makePostCard(post, num) {
@@ -326,13 +326,14 @@
       return isNaN(d.getTime()) ? null : d;
     }
 
-    function startTimer(endsAtRaw) {
+    function startTimer(round) {
       if (timerInterval) clearInterval(timerInterval);
       const timerEl = document.getElementById('timer');
       const statusEl = document.getElementById('roundStatus');
       const barEl = document.querySelector('.timer-bar');
 
-      const ends = parseDbDate(endsAtRaw);
+      const ends = parseDbDate(round && round.ends_at);
+      const starts = parseDbDate(round && round.starts_at);
       if (!ends) {
         timerEl.textContent = '--h --m --s';
         statusEl.textContent = 'no active round';
@@ -340,6 +341,7 @@
         return;
       }
       const endsMs = ends.getTime();
+      const totalMs = Math.max(1, (endsMs - (starts ? starts.getTime() : endsMs - 62 * 3600 * 1000)));
 
       function tick() {
         const now = Date.now();
@@ -355,7 +357,6 @@
           return;
         }
 
-        const total = 24 * 60 * 60 * 1000;
         const h = Math.floor(diff / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
@@ -364,7 +365,7 @@
           String(h).padStart(2, '0') + 'h ' +
           String(m).padStart(2, '0') + 'm ' +
           String(s).padStart(2, '0') + 's';
-        barEl.style.width = Math.max(0, Math.min(100, ((total - diff) / total) * 100)).toFixed(2) + '%';
+        barEl.style.width = Math.max(0, Math.min(100, ((totalMs - diff) / totalMs) * 100)).toFixed(2) + '%';
       }
 
       tick();
