@@ -854,6 +854,21 @@ body {
   color: var(--ember);
 }
 
+.like-btn.voted {
+  opacity: 0.45;
+  cursor: default;
+  filter: grayscale(0.6);
+}
+
+.like-btn.voted:hover {
+  transform: none;
+  filter: grayscale(0.6);
+}
+
+.like-btn.voted:active {
+  transform: none;
+}
+
 
 .info-section {
   display: grid;

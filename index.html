@@ -209,6 +209,7 @@
         const d = await api('/api/round');
         currentRound = d.round || null;
         renderRound(currentRound);
+        loadMyVotes();
       } catch (err) {
         document.getElementById('roundStatus').textContent = 'no active round';
         console.error(err);
@@ -262,6 +263,27 @@
       startTimer(round);
     }
 
+    let myVotes = new Set();
+
+    async function loadMyVotes() {
+      try {
+        const d = await api('/api/myvotes?user_id=' + encodeURIComponent(getUserId()));
+        myVotes = new Set(d.post_ids || []);
+        markVoted();
+      } catch (err) { /* ignore */ }
+    }
+
+    function markVoted() {
+      document.querySelectorAll('.post-card').forEach((card) => {
+        const btn = card.querySelector('.like-btn');
+        if (btn && myVotes.has(card.dataset.id)) {
+          btn.classList.add('liked', 'voted');
+          btn.disabled = true;
+          btn.title = 'You already gave fire';
+        }
+      });
+    }
+
     function makePostCard(post, num) {
       const card = document.createElement('article');
       card.className = 'post-card show';
@@ -281,18 +303,25 @@
         '</div>';
       card.querySelector('.like-btn').addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (e.currentTarget.classList.contains('voting')) return;
         const btn = e.currentTarget;
+        if (btn.disabled || btn.classList.contains('voting')) return;
         btn.classList.add('voting');
         try {
           const d = await api('/api/vote', { method: 'POST', body: JSON.stringify({ post_id: post.id, user_id: getUserId() }) });
           btn.parentElement.querySelector('.like-count').textContent = d.votes;
-          btn.classList.add('liked');
+          btn.classList.add('liked', 'voted');
+          btn.disabled = true;
+          btn.title = 'You already gave fire';
           btn.style.transform = 'scale(1.35) rotate(-6deg)';
           setTimeout(() => { btn.style.transform = 'scale(1) rotate(0)'; }, 200);
           loadRound();
         } catch (err) {
           showToast(err.message);
+          if (err.message.includes('Already voted')) {
+            btn.classList.add('liked', 'voted');
+            btn.disabled = true;
+            myVotes.add(post.id);
+          }
         } finally {
           btn.classList.remove('voting');
         }
