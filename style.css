@@ -761,7 +761,7 @@ body {
 .post-medal {
   position: absolute;
   top: -12px;
-  right: 16px;
+  left: 16px;
   font-size: 1.7rem;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
   z-index: 2;
