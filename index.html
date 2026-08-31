@@ -238,7 +238,7 @@
       }
 
       sorted.forEach((post, i) => {
-        feed.appendChild(makePostCard(post, i + 2));
+        feed.appendChild(makePostCard(post, i + 2, i));
       });
 
       const top = sorted[0];
@@ -284,15 +284,19 @@
       });
     }
 
-    function makePostCard(post, num) {
+    function makePostCard(post, num, rank) {
       const card = document.createElement('article');
-      card.className = 'post-card show';
+      const medals = ['🥇', '🥈', '🥉'];
+      const isTop = rank !== undefined && rank < 3;
+      card.className = 'post-card show' + (isTop ? ' top-' + (rank + 1) : '');
       card.dataset.id = post.id;
       const avatar = post.avatar_url
         ? '<img class="post-avatar" src="' + escapeHtml(post.avatar_url) + '" alt="" loading="lazy" />'
         : '';
+      const medal = isTop ? '<span class="post-medal">' + medals[rank] + '</span>' : '';
       card.innerHTML =
         '<div class="post-corner"><span class="post-number">#' + num + '</span><span class="post-corner-name">@' + escapeHtml(post.author_name || 'anonymous') + '</span></div>' +
+        medal +
         '<div class="post-header">' +
           '<div class="post-body">' +
             '<div class="post-meta">' + avatar + '<span class="post-author">' + escapeHtml(post.author_name || 'anonymous') + '</span><span class="dot">·</span><span class="post-time">' + formatTime(post.created_at) + '</span></div>' +

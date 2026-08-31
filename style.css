@@ -730,6 +730,45 @@ body {
   animation: fadeUp 0.5s ease both;
 }
 
+.post-card.top-1 {
+  border-color: rgba(245, 201, 106, 0.55);
+  background: linear-gradient(160deg, rgba(245, 201, 106, 0.12), rgba(255, 255, 255, 0.02) 60%);
+  box-shadow: 0 0 34px rgba(245, 201, 106, 0.14);
+}
+
+.post-card.top-1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 201, 106, 0.7), transparent);
+}
+
+.post-card.top-2 {
+  border-color: rgba(200, 210, 220, 0.4);
+  background: linear-gradient(160deg, rgba(200, 210, 220, 0.08), rgba(255, 255, 255, 0.02) 60%);
+  box-shadow: 0 0 26px rgba(200, 210, 220, 0.08);
+}
+
+.post-card.top-3 {
+  border-color: rgba(205, 127, 50, 0.4);
+  background: linear-gradient(160deg, rgba(205, 127, 50, 0.08), rgba(255, 255, 255, 0.02) 60%);
+  box-shadow: 0 0 22px rgba(205, 127, 50, 0.07);
+}
+
+.post-medal {
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  font-size: 1.7rem;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+  z-index: 2;
+  animation: float 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
 .post-header {
   display: flex;
   justify-content: space-between;
