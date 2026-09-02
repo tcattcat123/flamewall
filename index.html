@@ -20,6 +20,8 @@
 
   
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -152,6 +154,19 @@
       <a href="#" class="winner-link" id="winnerLink2" style="display:none"></a>
       <div class="winner-likes" id="winnerLikes">🔥 0</div>
       <button class="btn-yellow" id="winnerCloseBtn">Awesome!</button>
+    </div>
+  </div>
+
+  <div id="mapModal" class="modal hidden">
+    <div class="modal-content map-modal-content">
+      <span class="modal-close" id="closeMapBtn">&times;</span>
+      <h2 class="modal-title">🌍 Where are you?</h2>
+      <p class="map-hint">Click on the map to drop your pin — show the world where you are.</p>
+      <div id="map" class="map-canvas"></div>
+      <div class="map-actions">
+        <span class="map-coords" id="mapCoords">No location selected</span>
+        <button class="btn-gradient" id="mapSaveBtn" disabled>Save location</button>
+      </div>
     </div>
   </div>
 
@@ -302,7 +317,10 @@
           '<div class="post-body">' +
             '<div class="post-meta">' + avatar + '<span class="post-author">' + escapeHtml(post.author_name || 'anonymous') + '</span><span class="dot">·</span><span class="post-time">' + formatTime(post.created_at) + '</span></div>' +
             '<div class="post-text">' + escapeHtml(post.text) + '</div>' +
-            (post.link ? '<a href="' + escapeHtml(post.link) + '" class="post-link" target="_blank" rel="noopener">' + escapeHtml(post.link.replace(/^https?:\/\//, '')) + '</a>' : '') +
+            '<div class="post-links">' +
+              (post.link ? '<a href="' + escapeHtml(post.link) + '" class="post-link" target="_blank" rel="noopener">' + escapeHtml(post.link.replace(/^https?:\/\//, '')) + '</a>' : '') +
+              '<button class="post-map-btn" data-map="1" aria-label="Show on map">📍 Map</button>' +
+            '</div>' +
           '</div>' +
           '<div class="post-likes-section"><button class="like-btn" aria-label="Give fire">🔥</button><span class="like-count">' + (post.votes || 0) + '</span></div>' +
         '</div>';
@@ -331,8 +349,94 @@
           btn.classList.remove('voting');
         }
       });
+      const mapBtn = card.querySelector('.post-map-btn');
+      if (mapBtn) {
+        mapBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openMapModal(post);
+        });
+      }
       return card;
     }
+
+    // ============================================
+    // WORLD MAP (Leaflet)
+    // ============================================
+    let mapInstance = null;
+    let mapMarker = null;
+    let mapPost = null;
+    let mapLat = null;
+    let mapLng = null;
+    const mapModal = document.getElementById('mapModal');
+    const closeMapBtn = document.getElementById('closeMapBtn');
+    const mapSaveBtn = document.getElementById('mapSaveBtn');
+    const mapCoordsEl = document.getElementById('mapCoords');
+
+    function initMap() {
+      if (mapInstance) return;
+      mapInstance = L.map('map').setView([30, 10], 2);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap',
+      }).addTo(mapInstance);
+
+      mapInstance.on('click', (ev) => {
+        mapLat = ev.latlng.lat.toFixed(4);
+        mapLng = ev.latlng.lng.toFixed(4);
+        if (mapMarker) mapMarker.setLatLng(ev.latlng);
+        else mapMarker = L.marker(ev.latlng).addTo(mapInstance);
+        mapCoordsEl.textContent = '📍 ' + mapLat + ', ' + mapLng;
+        mapSaveBtn.disabled = false;
+      });
+    }
+
+    function openMapModal(post) {
+      mapPost = post;
+      mapLat = null;
+      mapLng = null;
+      mapCoordsEl.textContent = 'No location selected';
+      mapSaveBtn.disabled = true;
+      mapModal.classList.remove('hidden');
+      setTimeout(() => {
+        initMap();
+        mapInstance.invalidateSize();
+        // if post already has coords, show them
+        if (post.lat != null && post.lng != null) {
+          const latlng = [Number(post.lat), Number(post.lng)];
+          mapInstance.setView(latlng, 5);
+          if (mapMarker) mapMarker.setLatLng(latlng);
+          else mapMarker = L.marker(latlng).addTo(mapInstance);
+          mapLat = Number(post.lat).toFixed(4);
+          mapLng = Number(post.lng).toFixed(4);
+          mapCoordsEl.textContent = '📍 ' + mapLat + ', ' + mapLng;
+          mapSaveBtn.disabled = false;
+        } else {
+          mapInstance.setView([30, 10], 2);
+          if (mapMarker) mapInstance.removeLayer(mapMarker);
+          mapMarker = null;
+        }
+      }, 150);
+    }
+
+    closeMapBtn.addEventListener('click', () => mapModal.classList.add('hidden'));
+    mapModal.addEventListener('click', (e) => { if (e.target === mapModal) mapModal.classList.add('hidden'); });
+
+    mapSaveBtn.addEventListener('click', async () => {
+      if (!mapPost || mapLat == null || mapLng == null) return;
+      mapSaveBtn.disabled = true;
+      try {
+        await api('/api/location', {
+          method: 'POST',
+          body: JSON.stringify({ post_id: mapPost.id, lat: mapLat, lng: mapLng, user_id: getUserId() }),
+        });
+        showToast('Location saved! 📍');
+        mapModal.classList.add('hidden');
+        loadRound();
+      } catch (err) {
+        showToast(err.message);
+        mapSaveBtn.disabled = false;
+      }
+    });
 
     function showToast(msg) {
       let t = document.getElementById('toast');
