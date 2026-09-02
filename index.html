@@ -318,8 +318,8 @@
             '<div class="post-meta">' + avatar + '<span class="post-author">' + escapeHtml(post.author_name || 'anonymous') + '</span><span class="dot">·</span><span class="post-time">' + formatTime(post.created_at) + '</span></div>' +
             '<div class="post-text">' + escapeHtml(post.text) + '</div>' +
             '<div class="post-links">' +
-              (post.link ? '<a href="' + escapeHtml(post.link) + '" class="post-link" target="_blank" rel="noopener">' + escapeHtml(post.link.replace(/^https?:\/\//, '')) + '</a>' : '') +
-              '<button class="post-map-btn" data-map="1" aria-label="Show on map">📍 Map</button>' +
+              '<button class="post-map-btn" data-map="1" aria-label="Show on map">📍 Show on map</button>' +
+              (post.link ? '<a href="' + escapeHtml(post.link) + '" class="post-ext-link" target="_blank" rel="noopener" aria-label="Open original link">↗</a>' : '') +
             '</div>' +
           '</div>' +
           '<div class="post-likes-section"><button class="like-btn" aria-label="Give fire">🔥</button><span class="like-count">' + (post.votes || 0) + '</span></div>' +
