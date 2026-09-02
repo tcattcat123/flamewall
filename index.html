@@ -35,6 +35,9 @@
         <div class="hero-inner">
           <h1 class="logo">Flame<span class="logo-accent">Wall</span></h1>
           <p class="subtitle">Post for <strong>$1</strong> · top takes <strong>50% of the pot</strong></p>
+          <div class="hero-actions">
+            <button class="hero-map-btn" id="headerMapBtn">🌍 World map</button>
+          </div>
           <div class="fomo">
             <span class="fomo-icon">⚡</span>
             <span class="fomo-badge">free slots: <strong id="fomoSlots">99</strong></span>
@@ -391,17 +394,16 @@
     }
 
     function openMapModal(post) {
-      mapPost = post;
+      mapPost = post || null;
       mapLat = null;
       mapLng = null;
-      mapCoordsEl.textContent = 'No location selected';
+      mapCoordsEl.textContent = mapPost ? 'No location selected' : 'Browse the world map';
       mapSaveBtn.disabled = true;
       mapModal.classList.remove('hidden');
       setTimeout(() => {
         initMap();
         mapInstance.invalidateSize();
-        // if post already has coords, show them
-        if (post.lat != null && post.lng != null) {
+        if (post && post.lat != null && post.lng != null) {
           const latlng = [Number(post.lat), Number(post.lng)];
           mapInstance.setView(latlng, 5);
           if (mapMarker) mapMarker.setLatLng(latlng);
@@ -417,6 +419,8 @@
         }
       }, 150);
     }
+
+    document.getElementById('headerMapBtn').addEventListener('click', () => openMapModal(null));
 
     closeMapBtn.addEventListener('click', () => mapModal.classList.add('hidden'));
     mapModal.addEventListener('click', (e) => { if (e.target === mapModal) mapModal.classList.add('hidden'); });
