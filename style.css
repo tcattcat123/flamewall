@@ -1289,6 +1289,25 @@ body {
   color: var(--gold);
 }
 
+.post-country-info {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ember);
+  background: rgba(255, 122, 50, 0.08);
+  border: 1px dashed rgba(255, 122, 50, 0.3);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.map-country {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ember);
+  text-align: center;
+}
+
 .map-modal-content {
   max-width: 640px;
   padding: 22px 24px 20px;

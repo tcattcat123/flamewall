@@ -19,6 +19,12 @@ export async function POST(req) {
     const link = String(body.link || '').trim();
     const authorName = String(body.author_name || 'anonymous').trim();
     const userId = String(body.user_id || '').trim();
+    const countryCode = String(body.country_code || '').trim().toUpperCase();
+
+    // Validate country code if provided
+    if (countryCode && !/^[A-Z]{2,3}$/.test(countryCode)) {
+      return json({ error: 'country_code must be an ISO code like RU, US, DE' }, 400);
+    }
 
     let tweetData = null;
     if (tweetUrl) {
@@ -83,12 +89,18 @@ export async function POST(req) {
         link: finalLink || null,
         avatar_url: finalAvatar,
         tweet_id: finalTweetId,
+        country_code: countryCode || null,
         votes: tweetData ? tweetData.likes : 0,
         paid: true,
       })
       .select('*')
       .single();
-    if (insertError) return json({ error: 'Insert error: ' + insertError.message }, 500);
+    if (insertError) {
+      if (insertError.code === '23505' && String(insertError.message).includes('uq_posts_country')) {
+        return json({ error: 'This country is already claimed on the map' }, 409);
+      }
+      return json({ error: 'Insert error: ' + insertError.message }, 500);
+    }
 
     await admin
       .from('rounds')

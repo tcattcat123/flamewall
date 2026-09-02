@@ -135,6 +135,7 @@
         <div class="form-group">
           <label for="postTweetUrl">Twitter / X link *</label>
           <input type="url" id="postTweetUrl" placeholder="https://x.com/user/status/123" required />
+          <div class="post-country-info" id="postCountryInfo" style="display:none"></div>
           <p class="form-rules">You publish a post. If your post gets the most 🔥 activity, you take <strong>50% of the total pot</strong>. The post stays on the wall for 24 hours.</p>
         </div>
         <div class="price-row" id="priceRow">
@@ -163,13 +164,14 @@
   <div id="mapModal" class="modal hidden">
     <div class="modal-content map-modal-content">
       <span class="modal-close" id="closeMapBtn">&times;</span>
-      <h2 class="modal-title">🌍 Where are you?</h2>
-      <p class="map-hint">Click on the map to drop your pin — show the world where you are.</p>
+      <h2 class="modal-title">🌍 Claim your country</h2>
+      <p class="map-hint">Click a country on the map to occupy it with your tweet. One country — one tweet.</p>
       <div id="map" class="map-canvas"></div>
       <div class="map-actions">
-        <span class="map-coords" id="mapCoords">No location selected</span>
-        <button class="btn-gradient" id="mapSaveBtn" disabled>Save location</button>
+        <span class="map-coords" id="mapCoords">Select a country on the map</span>
+        <button class="btn-gradient" id="mapSaveBtn" disabled>Claim country</button>
       </div>
+      <div class="map-country" id="mapCountryInfo" style="display:none"></div>
     </div>
   </div>
 
@@ -363,60 +365,103 @@
     }
 
     // ============================================
-    // WORLD MAP (Leaflet)
+    // WORLD MAP (Leaflet) — claim a country
     // ============================================
     let mapInstance = null;
-    let mapMarker = null;
+    let mapLayer = null;
     let mapPost = null;
-    let mapLat = null;
-    let mapLng = null;
+    let selectedCountry = null;   // { code, name }
+    let claimedCountries = {};    // code -> { author_name }
     const mapModal = document.getElementById('mapModal');
     const closeMapBtn = document.getElementById('closeMapBtn');
     const mapSaveBtn = document.getElementById('mapSaveBtn');
     const mapCoordsEl = document.getElementById('mapCoords');
+    const mapCountryInfo = document.getElementById('mapCountryInfo');
+
+    const GEO_URL = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson';
 
     function initMap() {
       if (mapInstance) return;
-      mapInstance = L.map('map').setView([30, 10], 2);
+      mapInstance = L.map('map').setView([20, 0], 2);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
+        maxZoom: 8,
         attribution: '&copy; OpenStreetMap',
       }).addTo(mapInstance);
 
-      mapInstance.on('click', (ev) => {
-        mapLat = ev.latlng.lat.toFixed(4);
-        mapLng = ev.latlng.lng.toFixed(4);
-        if (mapMarker) mapMarker.setLatLng(ev.latlng);
-        else mapMarker = L.marker(ev.latlng).addTo(mapInstance);
-        mapCoordsEl.textContent = '📍 ' + mapLat + ', ' + mapLng;
-        mapSaveBtn.disabled = false;
-      });
+      fetch(GEO_URL)
+        .then((r) => r.json())
+        .then((geo) => {
+          mapLayer = L.geoJSON(geo, {
+            style: countryStyle,
+            onEachFeature: (feature, layer) => {
+              layer.on('click', () => onCountryClick(feature));
+              layer.on('mouseover', () => layer.setStyle({ weight: 2, color: '#ff7a32' }));
+              layer.on('mouseout', () => layer.setStyle(countryStyle(feature)));
+            },
+          }).addTo(mapInstance);
+          styleCountries();
+        })
+        .catch(() => {
+          mapCoordsEl.textContent = 'Could not load country borders';
+        });
+    }
+
+    function countryStyle(feature) {
+      const code = getCountryCode(feature);
+      const claimed = claimedCountries[code];
+      return {
+        fillColor: claimed ? '#f5c96a' : '#2a2a35',
+        weight: 0.6,
+        color: claimed ? '#c89a3c' : '#555',
+        fillOpacity: claimed ? 0.55 : 0.35,
+      };
+    }
+
+    function getCountryCode(feature) {
+      const p = feature.properties || {};
+      return (p.ISO_A2 || p.ISO_A3 || p.ADM0_A3 || p.id || '').toString().toUpperCase();
+    }
+
+    function styleCountries() {
+      if (mapLayer) mapLayer.setStyle(countryStyle);
+    }
+
+    function onCountryClick(feature) {
+      const code = getCountryCode(feature);
+      const name = (feature.properties && (feature.properties.NAME || feature.properties.NAME_LONG || feature.properties.NAME_EN)) || code;
+      if (!code || code === '-99' || code === 'ATA') return;
+
+      if (claimedCountries[code]) {
+        showToast('This country is already claimed by @' + claimedCountries[code].author_name);
+        return;
+      }
+
+      selectedCountry = { code, name };
+      mapCoordsEl.textContent = '📍 ' + name + ' (' + code + ')';
+      mapCountryInfo.textContent = 'Claim ' + name + ' with your tweet';
+      mapCountryInfo.style.display = '';
+      mapSaveBtn.disabled = false;
     }
 
     function openMapModal(post) {
       mapPost = post || null;
-      mapLat = null;
-      mapLng = null;
-      mapCoordsEl.textContent = mapPost ? 'No location selected' : 'Browse the world map';
+      selectedCountry = null;
       mapSaveBtn.disabled = true;
+      mapCoordsEl.textContent = 'Select a country on the map';
+      mapCountryInfo.style.display = 'none';
+
+      // build claimed map from current posts
+      claimedCountries = {};
+      const posts = (currentRound && currentRound.posts) || [];
+      posts.forEach((p) => {
+        if (p.country_code) claimedCountries[p.country_code.toUpperCase()] = { author_name: p.author_name || 'anonymous' };
+      });
+
       mapModal.classList.remove('hidden');
       setTimeout(() => {
         initMap();
         mapInstance.invalidateSize();
-        if (post && post.lat != null && post.lng != null) {
-          const latlng = [Number(post.lat), Number(post.lng)];
-          mapInstance.setView(latlng, 5);
-          if (mapMarker) mapMarker.setLatLng(latlng);
-          else mapMarker = L.marker(latlng).addTo(mapInstance);
-          mapLat = Number(post.lat).toFixed(4);
-          mapLng = Number(post.lng).toFixed(4);
-          mapCoordsEl.textContent = '📍 ' + mapLat + ', ' + mapLng;
-          mapSaveBtn.disabled = false;
-        } else {
-          mapInstance.setView([30, 10], 2);
-          if (mapMarker) mapInstance.removeLayer(mapMarker);
-          mapMarker = null;
-        }
+        styleCountries();
       }, 150);
     }
 
@@ -425,21 +470,12 @@
     closeMapBtn.addEventListener('click', () => mapModal.classList.add('hidden'));
     mapModal.addEventListener('click', (e) => { if (e.target === mapModal) mapModal.classList.add('hidden'); });
 
-    mapSaveBtn.addEventListener('click', async () => {
-      if (!mapPost || mapLat == null || mapLng == null) return;
-      mapSaveBtn.disabled = true;
-      try {
-        await api('/api/location', {
-          method: 'POST',
-          body: JSON.stringify({ post_id: mapPost.id, lat: mapLat, lng: mapLng, user_id: getUserId() }),
-        });
-        showToast('Location saved! 📍');
-        mapModal.classList.add('hidden');
-        loadRound();
-      } catch (err) {
-        showToast(err.message);
-        mapSaveBtn.disabled = false;
-      }
+    mapSaveBtn.addEventListener('click', () => {
+      if (!selectedCountry) return;
+      // store chosen country and open the add-post modal
+      pendingCountry = selectedCountry;
+      mapModal.classList.add('hidden');
+      openModalBtn.click();
     });
 
     function showToast(msg) {
@@ -538,6 +574,14 @@
 
     openModalBtn.addEventListener('click', () => {
       postError.textContent = '';
+      const countryEl = document.getElementById('postCountryInfo');
+      if (pendingCountry) {
+        countryEl.textContent = '🌍 Country: ' + pendingCountry.name + ' (' + pendingCountry.code + ')';
+        countryEl.style.display = '';
+      } else {
+        countryEl.textContent = '';
+        countryEl.style.display = 'none';
+      }
       addModal.classList.remove('hidden');
     });
     closeModalBtn.addEventListener('click', () => addModal.classList.add('hidden'));
@@ -557,10 +601,11 @@
       try {
         await api('/api/post', {
           method: 'POST',
-          body: JSON.stringify({ tweet_url: tweetUrl, user_id: getUserId(), demo_payment: true }),
+          body: JSON.stringify({ tweet_url: tweetUrl, user_id: getUserId(), demo_payment: true, country_code: pendingCountry ? pendingCountry.code : null }),
         });
         addModal.classList.add('hidden');
         postForm.reset();
+        pendingCountry = null;
         consumeFreeSlot();
         loadRound();
       } catch (err) {
@@ -610,6 +655,7 @@
     // FREE SLOTS (FOMO counter)
     // ============================================
     let freeSlots = parseInt(localStorage.getItem('fw-free-slots')) || 99;
+    let pendingCountry = null;
 
     function renderFreeSlots() {
       const badge = document.getElementById('freeSlotsBtn');
