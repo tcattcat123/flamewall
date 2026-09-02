@@ -36,7 +36,7 @@
           <h1 class="logo">Flame<span class="logo-accent">Wall</span></h1>
           <p class="subtitle">Post for <strong>$1</strong> · top takes <strong>50% of the pot</strong></p>
           <div class="hero-actions">
-            <button class="hero-map-btn" id="headerMapBtn">🌍 World map</button>
+            <a href="map.html" class="hero-map-btn">🌍 World map</a>
           </div>
           <div class="fomo">
             <span class="fomo-icon">⚡</span>
@@ -158,20 +158,6 @@
       <a href="#" class="winner-link" id="winnerLink2" style="display:none"></a>
       <div class="winner-likes" id="winnerLikes">🔥 0</div>
       <button class="btn-yellow" id="winnerCloseBtn">Awesome!</button>
-    </div>
-  </div>
-
-  <div id="mapModal" class="modal hidden">
-    <div class="modal-content map-modal-content">
-      <span class="modal-close" id="closeMapBtn">&times;</span>
-      <h2 class="modal-title">🌍 Claim your country</h2>
-      <p class="map-hint">Click a country on the map to occupy it with your tweet. One country — one tweet.</p>
-      <div id="map" class="map-canvas"></div>
-      <div class="map-actions">
-        <span class="map-coords" id="mapCoords">Select a country on the map</span>
-        <button class="btn-gradient" id="mapSaveBtn" disabled>Claim country</button>
-      </div>
-      <div class="map-country" id="mapCountryInfo" style="display:none"></div>
     </div>
   </div>
 
@@ -323,7 +309,7 @@
             '<div class="post-meta">' + avatar + '<span class="post-author">' + escapeHtml(post.author_name || 'anonymous') + '</span><span class="dot">·</span><span class="post-time">' + formatTime(post.created_at) + '</span></div>' +
             '<div class="post-text">' + escapeHtml(post.text) + '</div>' +
             '<div class="post-links">' +
-              '<button class="post-map-btn" data-map="1" aria-label="Show on map">📍 Show on map</button>' +
+              '<a href="map.html" class="post-map-btn">📍 Show on map</a>' +
               (post.link ? '<a href="' + escapeHtml(post.link) + '" class="post-ext-link" target="_blank" rel="noopener" aria-label="Open original link">↗</a>' : '') +
             '</div>' +
           '</div>' +
@@ -363,120 +349,6 @@
       }
       return card;
     }
-
-    // ============================================
-    // WORLD MAP (Leaflet) — claim a country
-    // ============================================
-    let mapInstance = null;
-    let mapLayer = null;
-    let mapPost = null;
-    let selectedCountry = null;   // { code, name }
-    let claimedCountries = {};    // code -> { author_name }
-    const mapModal = document.getElementById('mapModal');
-    const closeMapBtn = document.getElementById('closeMapBtn');
-    const mapSaveBtn = document.getElementById('mapSaveBtn');
-    const mapCoordsEl = document.getElementById('mapCoords');
-    const mapCountryInfo = document.getElementById('mapCountryInfo');
-
-    const GEO_URL = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson';
-
-    function initMap() {
-      if (mapInstance) return;
-      mapInstance = L.map('map').setView([20, 0], 2);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 8,
-        attribution: '&copy; OpenStreetMap',
-      }).addTo(mapInstance);
-
-      fetch(GEO_URL)
-        .then((r) => r.json())
-        .then((geo) => {
-          mapLayer = L.geoJSON(geo, {
-            style: countryStyle,
-            onEachFeature: (feature, layer) => {
-              layer.on('click', () => onCountryClick(feature));
-              layer.on('mouseover', () => layer.setStyle({ weight: 2, color: '#ff7a32' }));
-              layer.on('mouseout', () => layer.setStyle(countryStyle(feature)));
-            },
-          }).addTo(mapInstance);
-          styleCountries();
-        })
-        .catch(() => {
-          mapCoordsEl.textContent = 'Could not load country borders';
-        });
-    }
-
-    function countryStyle(feature) {
-      const code = getCountryCode(feature);
-      const claimed = claimedCountries[code];
-      return {
-        fillColor: claimed ? '#f5c96a' : '#2a2a35',
-        weight: 0.6,
-        color: claimed ? '#c89a3c' : '#555',
-        fillOpacity: claimed ? 0.55 : 0.35,
-      };
-    }
-
-    function getCountryCode(feature) {
-      const p = feature.properties || {};
-      return (p.ISO_A2 || p.ISO_A3 || p.ADM0_A3 || p.id || '').toString().toUpperCase();
-    }
-
-    function styleCountries() {
-      if (mapLayer) mapLayer.setStyle(countryStyle);
-    }
-
-    function onCountryClick(feature) {
-      const code = getCountryCode(feature);
-      const name = (feature.properties && (feature.properties.NAME || feature.properties.NAME_LONG || feature.properties.NAME_EN)) || code;
-      if (!code || code === '-99' || code === 'ATA') return;
-
-      if (claimedCountries[code]) {
-        showToast('This country is already claimed by @' + claimedCountries[code].author_name);
-        return;
-      }
-
-      selectedCountry = { code, name };
-      mapCoordsEl.textContent = '📍 ' + name + ' (' + code + ')';
-      mapCountryInfo.textContent = 'Claim ' + name + ' with your tweet';
-      mapCountryInfo.style.display = '';
-      mapSaveBtn.disabled = false;
-    }
-
-    function openMapModal(post) {
-      mapPost = post || null;
-      selectedCountry = null;
-      mapSaveBtn.disabled = true;
-      mapCoordsEl.textContent = 'Select a country on the map';
-      mapCountryInfo.style.display = 'none';
-
-      // build claimed map from current posts
-      claimedCountries = {};
-      const posts = (currentRound && currentRound.posts) || [];
-      posts.forEach((p) => {
-        if (p.country_code) claimedCountries[p.country_code.toUpperCase()] = { author_name: p.author_name || 'anonymous' };
-      });
-
-      mapModal.classList.remove('hidden');
-      setTimeout(() => {
-        initMap();
-        mapInstance.invalidateSize();
-        styleCountries();
-      }, 150);
-    }
-
-    document.getElementById('headerMapBtn').addEventListener('click', () => openMapModal(null));
-
-    closeMapBtn.addEventListener('click', () => mapModal.classList.add('hidden'));
-    mapModal.addEventListener('click', (e) => { if (e.target === mapModal) mapModal.classList.add('hidden'); });
-
-    mapSaveBtn.addEventListener('click', () => {
-      if (!selectedCountry) return;
-      // store chosen country and open the add-post modal
-      pendingCountry = selectedCountry;
-      mapModal.classList.add('hidden');
-      openModalBtn.click();
-    });
 
     function showToast(msg) {
       let t = document.getElementById('toast');

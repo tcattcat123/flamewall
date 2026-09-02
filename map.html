@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>FlameWall — World Map</title>
+  <meta name="description" content="FlameWall world map — see who claimed each country." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #0b0b0e;
+      overflow: hidden;
+    }
+    body.light {
+      background: #eef1f4;
+    }
+    .map-full {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    #map {
+      width: 100%;
+      height: 100vh;
+      background: #101014;
+    }
+    body.light #map {
+      background: #eef1f4;
+    }
+    .map-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(11, 11, 14, 0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    body.light .map-topbar {
+      background: rgba(238, 241, 244, 0.85);
+      border-bottom-color: rgba(30, 40, 50, 0.1);
+    }
+    .map-topbar .logo-mini {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f4f1ec;
+      text-decoration: none;
+    }
+    .map-topbar .logo-mini span { color: #ff7a32; }
+    body.light .map-topbar .logo-mini { color: #2f343a; }
+    .map-back {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #9b968c;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 99px;
+      padding: 7px 14px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .map-back:hover {
+      color: #ff7a32;
+      border-color: rgba(255, 122, 50, 0.4);
+    }
+    .map-legend {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: #9b968c;
+      background: rgba(11, 11, 14, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
+      padding: 8px 18px;
+      white-space: nowrap;
+    }
+    body.light .map-legend {
+      background: rgba(238, 241, 244, 0.85);
+      color: #5f6872;
+      border-color: rgba(30, 40, 50, 0.12);
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .legend-dot.free { background: #2a2a35; border: 1px solid #555; }
+    .legend-dot.claimed { background: #f5c96a; }
+    body.light .legend-dot.free { background: #e0e4e8; border-color: #9aa1a8; }
+
+    .map-user-marker {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff7a32, #ff3d00);
+      border: 3px solid #f5c96a;
+      box-shadow: 0 0 0 4px rgba(245, 201, 106, 0.25), 0 4px 14px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .map-user-marker:hover { transform: scale(1.15); }
+    .map-user-marker img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .map-popup-card {
+      min-width: 220px;
+      padding: 4px 2px;
+      background: #14141a;
+      color: #f4f1ec;
+      font-family: 'Inter', sans-serif;
+    }
+    body.light .map-popup-card { background: #fff; color: #2f343a; }
+    .map-popup-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .map-popup-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: linear-gradient(135deg, #ff7a32, #ff3d00);
+    }
+    .map-popup-handle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #f4f1ec;
+    }
+    body.light .map-popup-handle { color: #2f343a; }
+    .map-popup-country {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: #f5c96a;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .map-popup-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .map-popup-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .map-popup-votes {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ff7a32;
+    }
+    .map-popup-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: #ff7a32;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #14141a;
+      border-radius: 14px;
+      border: 1px solid rgba(245, 201, 106, 0.3);
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.5);
+    }
+    .leaflet-popup-tip { background: #14141a; }
+    .leaflet-popup-close-button { color: #666 !important; }
+    .leaflet-container { font-family: 'Inter', sans-serif; }
+    .leaflet-tile-pane { filter: grayscale(0.2) brightness(0.75); }
+    body.light .leaflet-tile-pane { filter: grayscale(0.15) brightness(0.98); }
+  </style>
+</head>
+<body>
+  <div class="map-topbar">
+    <a href="index.html" class="logo-mini">Flame<span>Wall</span></a>
+    <a href="index.html" class="map-back">← Back to the wall</a>
+  </div>
+  <div class="map-full" id="map"></div>
+  <div class="map-legend">
+    <span class="legend-item"><span class="legend-dot claimed"></span> claimed country</span>
+    <span class="legend-item"><span class="legend-dot free"></span> free</span>
+  </div>
+
+  <script>
+    const API = window.location.origin;
+    const GEO_URL = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson';
+
+    // theme
+    const savedTheme = localStorage.getItem('fw-theme');
+    if (savedTheme === 'light') document.body.classList.add('light');
+
+    const map = L.map('map').setView([20, 0], 2);
+
+    function addTiles() {
+      const providers = [
+        ['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '&copy; OpenStreetMap'],
+        ['https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', '&copy; CARTO'],
+        ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', 'Esri'],
+      ];
+      let layer = null;
+      for (const [url, attr] of providers) {
+        layer = L.tileLayer(url, { maxZoom: 10, attribution: attr });
+        layer.addTo(map);
+        layer.on('tileerror', () => {
+          try { map.removeLayer(layer); } catch (e) {}
+          const idx = providers.indexOf([url, attr]);
+          const next = providers[idx + 1];
+          if (next) {
+            const alt = L.tileLayer(next[0], { maxZoom: 10, attribution: next[1] });
+            alt.addTo(map);
+            layer = alt;
+          }
+        });
+        break; // start with first; tileerror switches to next
+      }
+    }
+    addTiles();
+
+    const countryById = {}; // code -> geojson feature
+    let claimedPosts = {};  // code -> post
+
+    function getCountryCode(f) {
+      const p = f.properties || {};
+      return (p.ISO_A2 || p.ISO_A3 || p.ADM0_A3 || p.id || '').toString().toUpperCase();
+    }
+
+    function styleCountry(f) {
+      const claimed = !!claimedPosts[getCountryCode(f)];
+      return {
+        fillColor: claimed ? '#f5c96a' : '#1e1e2a',
+        weight: 0.5,
+        color: claimed ? '#c89a3c' : '#3a3a48',
+        fillOpacity: claimed ? 0.5 : 0.4,
+      };
+    }
+
+    function countryCentroid(feature) {
+      // naive centroid of largest polygon
+      const geom = feature.geometry;
+      let largest = null, maxArea = -1;
+      const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+      for (const poly of polys) {
+        const ring = poly[0];
+        let area = 0;
+        for (let i = 0; i < ring.length - 1; i++) {
+          area += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+        }
+        const a = Math.abs(area) / 2;
+        if (a > maxArea) { maxArea = a; largest = ring; }
+      }
+      let x = 0, y = 0, n = 0;
+      for (const [lon, lat] of largest) { x += lon; y += lat; n++; }
+      return [y / n, x / n];
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s == null ? '' : String(s);
+      return d.innerHTML;
+    }
+
+    function addUserMarkers() {
+      for (const [code, post] of Object.entries(claimedPosts)) {
+        const feat = countryById[code];
+        if (!feat) continue;
+        const pos = countryCentroid(feat);
+        const icon = L.divIcon({
+          className: '',
+          html: post.avatar_url
+            ? '<div class="map-user-marker"><img src="' + escapeHtml(post.avatar_url) + '" alt="" /></div>'
+            : '<div class="map-user-marker">' + escapeHtml((post.author_name || '?').charAt(0).toUpperCase()) + '</div>',
+          iconSize: [38, 38],
+          iconAnchor: [19, 19],
+        });
+        L.marker(pos, { icon }).addTo(map).bindPopup(
+          '<div class="map-popup-card">' +
+            '<div class="map-popup-head">' +
+              (post.avatar_url ? '<img class="map-popup-avatar" src="' + escapeHtml(post.avatar_url) + '" alt="" />' : '') +
+              '<div>' +
+                '<div class="map-popup-handle">@' + escapeHtml(post.author_name || 'anonymous') + '</div>' +
+                '<div class="map-popup-country">' + escapeHtml(code) + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="map-popup-text">' + escapeHtml(post.text) + '</div>' +
+            '<div class="map-popup-foot">' +
+              '<span class="map-popup-votes">🔥 ' + (post.votes || 0) + '</span>' +
+              (post.link ? '<a class="map-popup-link" href="' + escapeHtml(post.link) + '" target="_blank" rel="noopener">↗ open tweet</a>' : '') +
+            '</div>' +
+          '</div>',
+          { maxWidth: 300 }
+        );
+      }
+    }
+
+    async function load() {
+      // fetch posts
+      let posts = [];
+      try {
+        const d = await (await fetch(API + '/api/round')).json();
+        posts = (d.round && d.round.posts) || [];
+      } catch (e) { /* ignore */ }
+
+      claimedPosts = {};
+      posts.forEach((p) => {
+        if (p.country_code) claimedPosts[p.country_code.toUpperCase()] = p;
+      });
+
+      // load countries
+      try {
+        const res = await fetch(GEO_URL);
+        const geo = await res.json();
+        geo.features.forEach((f) => {
+          const code = getCountryCode(f);
+          if (code && code !== '-99' && code !== 'ATA') countryById[code] = f;
+        });
+        L.geoJSON(geo, {
+          style: styleCountry,
+          onEachFeature: (f, layer) => {
+            layer.on('mouseover', () => layer.setStyle({ weight: 1.2, color: '#ff7a32' }));
+            layer.on('mouseout', () => layer.setStyle(styleCountry(f)));
+          },
+        }).addTo(map);
+        addUserMarkers();
+      } catch (e) { /* ignore */ }
+    }
+
+    load();
+  </script>
+</body>
+</html>
