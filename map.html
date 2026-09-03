@@ -131,6 +131,37 @@
       height: 100%;
       object-fit: cover;
     }
+    .map-count-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ff3d00;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      box-shadow: 0 0 0 2px rgba(245, 201, 106, 0.4);
+    }
+    .map-popup-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #f5c96a;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    body.light .map-popup-title { color: #c89a3c; border-bottom-color: rgba(30,40,50,0.1); }
+    .map-popup-sep { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0; }
+    body.light .map-popup-sep { background: rgba(30,40,50,0.08); }
 
     .map-popup-card {
       min-width: 220px;
@@ -251,7 +282,7 @@
     addTiles();
 
     const countryById = {}; // code -> geojson feature
-    let claimedPosts = {};  // code -> post
+    let countryPosts = {};  // code -> [post, ...] sorted by votes desc
 
     function getCountryCode(f) {
       const p = f.properties || {};
@@ -259,7 +290,8 @@
     }
 
     function styleCountry(f) {
-      const claimed = !!claimedPosts[getCountryCode(f)];
+      const code = getCountryCode(f);
+      const claimed = !!(countryPosts[code] && countryPosts[code].length);
       return {
         fillColor: claimed ? '#f5c96a' : '#1e1e2a',
         weight: 0.5,
@@ -293,36 +325,51 @@
       return d.innerHTML;
     }
 
+    function popupCard(post) {
+      return '<div class="map-popup-card">' +
+        '<div class="map-popup-head">' +
+          (post.avatar_url ? '<img class="map-popup-avatar" src="' + escapeHtml(post.avatar_url) + '" alt="" />' : '') +
+          '<div>' +
+            '<div class="map-popup-handle">@' + escapeHtml(post.author_name || 'anonymous') + '</div>' +
+            '<div class="map-popup-country">' + escapeHtml(post.country_code || '') + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="map-popup-text">' + escapeHtml(post.text) + '</div>' +
+        '<div class="map-popup-foot">' +
+          '<span class="map-popup-votes">🔥 ' + (post.votes || 0) + '</span>' +
+          (post.link ? '<a class="map-popup-link" href="' + escapeHtml(post.link) + '" target="_blank" rel="noopener">↗ open tweet</a>' : '') +
+        '</div>' +
+      '</div>';
+    }
+
     function addUserMarkers() {
-      for (const [code, post] of Object.entries(claimedPosts)) {
+      for (const [code, posts] of Object.entries(countryPosts)) {
         const feat = countryById[code];
-        if (!feat) continue;
+        if (!feat || !posts.length) continue;
         const pos = countryCentroid(feat);
+        const top = posts[0];
+        const count = posts.length;
+
+        // marker: avatar of top author + count badge
+        const html = '<div class="map-user-marker">' +
+          (top.avatar_url ? '<img src="' + escapeHtml(top.avatar_url) + '" alt="" />' : escapeHtml((top.author_name || '?').charAt(0).toUpperCase())) +
+          (count > 1 ? '<span class="map-count-badge">' + count + '</span>' : '') +
+        '</div>';
+
         const icon = L.divIcon({
           className: '',
-          html: post.avatar_url
-            ? '<div class="map-user-marker"><img src="' + escapeHtml(post.avatar_url) + '" alt="" /></div>'
-            : '<div class="map-user-marker">' + escapeHtml((post.author_name || '?').charAt(0).toUpperCase()) + '</div>',
+          html,
           iconSize: [38, 38],
           iconAnchor: [19, 19],
         });
-        L.marker(pos, { icon }).addTo(map).bindPopup(
-          '<div class="map-popup-card">' +
-            '<div class="map-popup-head">' +
-              (post.avatar_url ? '<img class="map-popup-avatar" src="' + escapeHtml(post.avatar_url) + '" alt="" />' : '') +
-              '<div>' +
-                '<div class="map-popup-handle">@' + escapeHtml(post.author_name || 'anonymous') + '</div>' +
-                '<div class="map-popup-country">' + escapeHtml(code) + '</div>' +
-              '</div>' +
-            '</div>' +
-            '<div class="map-popup-text">' + escapeHtml(post.text) + '</div>' +
-            '<div class="map-popup-foot">' +
-              '<span class="map-popup-votes">🔥 ' + (post.votes || 0) + '</span>' +
-              (post.link ? '<a class="map-popup-link" href="' + escapeHtml(post.link) + '" target="_blank" rel="noopener">↗ open tweet</a>' : '') +
-            '</div>' +
-          '</div>',
-          { maxWidth: 300 }
-        );
+
+        // popup: list of top cards in this country
+        const cards = posts.slice(0, 8).map(popupCard).join('<div class="map-popup-sep"></div>');
+        const popupHtml = count > 8
+          ? '<div class="map-popup-title">' + escapeHtml(code) + ' — top ' + 8 + ' of ' + count + '</div>' + cards
+          : '<div class="map-popup-title">' + escapeHtml(code) + ' — ' + count + (count === 1 ? ' post' : ' posts') + '</div>' + cards;
+
+        L.marker(pos, { icon }).addTo(map).bindPopup(popupHtml, { maxWidth: 320 });
       }
     }
 
@@ -334,10 +381,18 @@
         posts = (d.round && d.round.posts) || [];
       } catch (e) { /* ignore */ }
 
-      claimedPosts = {};
+      // group posts by country_code, sorted by votes desc
+      countryPosts = {};
       posts.forEach((p) => {
-        if (p.country_code) claimedPosts[p.country_code.toUpperCase()] = p;
+        if (p.country_code) {
+          const code = p.country_code.toUpperCase();
+          if (!countryPosts[code]) countryPosts[code] = [];
+          countryPosts[code].push(p);
+        }
       });
+      for (const code of Object.keys(countryPosts)) {
+        countryPosts[code].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+      }
 
       // load countries
       try {
